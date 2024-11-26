@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "NovaFlat-Regular";
+  src: url("/src/assets/fonts/Nova-flat/NovaFlat-Regular.ttf") format("truetype"); /* Adjust format as needed */
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Arial";
+  src: url("/src/assets/fonts/Arial/ARIAL.ttf") format("truetype"); /* Adjust format as needed */
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Host-grotest";
+  src: url("/src/assets/fonts/Host-grotesk/static/HostGrotesk-Regular.ttf") format("truetype"); /* Adjust format as needed */
+  font-weight: normal;
+  font-style: normal;
+}@font-face {
+  font-family: "Roboto";
+  src: url("/src/assets/fonts/Roboto/Roboto-Regular.ttf") format("truetype"); /* Adjust format as needed */
+  font-weight: normal;
+  font-style: normal;
+}
