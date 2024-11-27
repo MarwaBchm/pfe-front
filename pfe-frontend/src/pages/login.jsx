@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Importing useNavigate from react-router-dom
+import axios from "axios"; // Import axios for API requests
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-
   const navigate = useNavigate(); // Declare navigate
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError(""); // Reset error message
 
@@ -25,8 +25,47 @@ const Login = () => {
       return;
     }
 
-    // Navigate to the Dashboard/Home after successful login
-    navigate("/dashboard/home"); // Replace '/dashboard' with your actual route
+    // Make the POST request to the Laravel backend for login
+    try {
+      const response = await axios.post("http://127.0.0.1:8000/api/login", {
+        email,
+        password,
+      });
+      print("hello");
+
+      if (response.status === 200) {
+        // Save the token to localStorage or state if needed
+        localStorage.setItem("token", response.data.token);
+
+        // Navigate to the dashboard or home page after successful login
+        navigate("/dashboard/home");
+      }
+    } catch (error) {
+      // Handle login failure
+      if (error.response && error.response.data) {
+        setError(error.response.data.message || "Invalid login credentials.");
+      } else {
+        setError("An error occurred. Please try again.");
+      }
+    }
+  };
+  const handleLogout = async () => {
+    try {
+      // Send POST request to the logout endpoint
+      await axios.post(
+        "http://127.0.0.1:8000/api/logout",
+        {},
+        {
+          withCredentials: true, // Include credentials (cookies/sessions)
+        }
+      );
+
+      // Redirect to the login page after successful logout
+      navigate("/login");
+    } catch (error) {
+      console.error("Logout failed:", error.response?.data || error.message);
+      alert("Logout failed. Please try again.");
+    }
   };
 
   return (
