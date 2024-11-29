@@ -5,7 +5,6 @@ import {
   FaClock,
   FaEnvelope,
 } from "react-icons/fa";
-import "./defenseSchedule.css";
 const DefenseSchedule = () => {
   return (
     <div className="defense-schedule-container">

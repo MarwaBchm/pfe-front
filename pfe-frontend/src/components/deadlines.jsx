@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import "./deadlines.css";
 const Deadlines = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
