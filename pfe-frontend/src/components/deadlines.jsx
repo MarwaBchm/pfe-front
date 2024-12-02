@@ -1,143 +1,233 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./deadlines.css";
+import "@fortawesome/fontawesome-free/css/all.min.css";
+
 const Deadlines = () => {
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
-  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+  const [role, setRole] = useState("admin"); // Current user role
+  const [formData, setFormData] = useState({
+    theme: "",
+    description: "",
+    dueDate: "",
+    email: "",
+    goTo: "",
+  });
+  const [selectedRole, setSelectedRole] = useState("prof"); // Role to send the deadline to
+  const [deadlines, setDeadlines] = useState([]); // Shared deadlines state
+  const [editingIndex, setEditingIndex] = useState(null); // For editing deadlines
 
-  const daysInMonth = (month, year) => new Date(year, month + 1, 0).getDate();
-  const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
+  // Load deadlines from localStorage on component mount
+  useEffect(() => {
+    const storedDeadlines = localStorage.getItem("deadlines");
+    if (storedDeadlines) {
+      setDeadlines(JSON.parse(storedDeadlines));
+    }
+  }, []);
 
-  const handleDateClick = (day) => {
-    setSelectedDate(`${day}/${currentMonth + 1}/${currentYear}`);
-  };
+  // Save deadlines to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem("deadlines", JSON.stringify(deadlines));
+  }, [deadlines]);
 
-  const handleNextMonth = () => {
-    if (currentMonth === 11) {
-      setCurrentMonth(0);
-      setCurrentYear(currentYear + 1);
+  // Save or Update Deadline
+  const handleSave = () => {
+    const newDeadline = { ...formData, role: selectedRole }; // Add selected role to deadline
+    if (editingIndex === null) {
+      setDeadlines([...deadlines, newDeadline]); // Add a new deadline
     } else {
-      setCurrentMonth(currentMonth + 1);
+      const updatedDeadlines = [...deadlines];
+      updatedDeadlines[editingIndex] = newDeadline; // Update existing deadline
+      setDeadlines(updatedDeadlines);
     }
+    setFormData({ theme: "", description: "", dueDate: "", email: "", goTo: "" }); // Reset form
+    setSelectedRole("prof");
+    setEditingIndex(null);
   };
 
-  const handlePreviousMonth = () => {
-    if (currentMonth === 0) {
-      setCurrentMonth(11);
-      setCurrentYear(currentYear - 1);
-    } else {
-      setCurrentMonth(currentMonth - 1);
-    }
+  // Edit Deadline
+  const handleEdit = (index) => {
+    const deadlineToEdit = deadlines[index];
+    setFormData(deadlineToEdit);
+    setSelectedRole(deadlineToEdit.role);
+    setEditingIndex(index);
   };
 
-  const renderDays = () => {
-    const totalDays = daysInMonth(currentMonth, currentYear);
-    const days = [];
+  // Delete Deadline
+  const handleDelete = (index) => {
+    const updatedDeadlines = deadlines.filter((_, i) => i !== index);
+    setDeadlines(updatedDeadlines);
+    setEditingIndex(null);
+  };
 
-    // Empty days for spacing
-    for (let i = 0; i < firstDayOfMonth; i++) {
-      days.push(<div key={`empty-${i}`} className="empty-day"></div>);
-    }
+  // Handle input changes
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [id]: value,
+    }));
+  };
 
-    // Render days of the month
-    for (let day = 1; day <= totalDays; day++) {
-      const dateString = `${day}/${currentMonth + 1}/${currentYear}`;
-      days.push(
-        <div
-          key={day}
-          className={`day ${selectedDate === dateString ? "selected" : ""}`}
-          onClick={() => handleDateClick(day)}
-        >
-          {day}
-        </div>
-      );
-    }
-
-    return days;
+  // Handle role selection
+  const handleRoleChange = (e) => {
+    setSelectedRole(e.target.value);
   };
 
   return (
-    <div className="calendar-container">
-      {/* Calendar Header */}
-      <div className="calendar-header">
-        <button onClick={handlePreviousMonth}>←</button>
-        <div>
-          <select
-            value={currentMonth}
-            onChange={(e) => setCurrentMonth(parseInt(e.target.value))}
-          >
-            {[
-              "January",
-              "February",
-              "March",
-              "April",
-              "May",
-              "June",
-              "July",
-              "August",
-              "September",
-              "October",
-              "November",
-              "December",
-            ].map((month, index) => (
-              <option key={index} value={index}>
-                {month}
-              </option>
-            ))}
-          </select>
-          <select
-            value={currentYear}
-            onChange={(e) => setCurrentYear(parseInt(e.target.value))}
-          >
-            {[...Array(10)].map((_, index) => (
-              <option key={index} value={2024 + index}>
-                {2024 + index}
-              </option>
-            ))}
-          </select>
-        </div>
-        <button onClick={handleNextMonth}>→</button>
-      </div>
-      <hr className="calendar-separator" />
-      {/* Calendar Days */}
-      <div className="calendar-grid">
-        {[
-          "Monday",
-          "Tuesday",
-          "Wednesday",
-          "Thursday",
-          "Friday",
-          "Saturday",
-          "Sunday",
-        ].map((day, index) => (
-          <div key={index} className="day-header">
-            {day}
+    <div>
+      {role === "admin" ? (
+        <div className="app-container">
+          <div className="header-container">
+            <h1 className="page-title">{editingIndex === null ? "Add Deadline" : "Edit Deadline"}</h1>
+            <div className="form-header">
+              <button className="form-button save-button" onClick={handleSave}>
+                {editingIndex === null ? "Save" : "Update"}
+              </button>
+              <button
+                className="form-button delete-button"
+                onClick={() => {
+                  if (editingIndex !== null) {
+                    setFormData({ theme: "", description: "", dueDate: "", email: "", goTo: "" }); // Clear form
+                    setEditingIndex(null); // Cancel editing
+                  }
+                }}
+              >
+                {editingIndex === null ? "Delete" : "Cancel Editing"}
+              </button>
+            </div>
           </div>
-        ))}
-        {renderDays()}
-      </div>
-
-      {/* Selected and Upcoming Dates */}
-      <div className="date-info">
-        <div className="selected-date">
-          <h4>Today's Deadline</h4>
-          <hr className="calendar-separator" />
-          {selectedDate ? (
-            <p>{selectedDate}</p>
+          <hr className="separator" />
+          <div className="form-container">
+            <form>
+              <div className="form-group">
+                <label htmlFor="theme">
+                  <i className="fas fa-book icon"></i> Theme:
+                </label>
+                <select
+                  id="theme"
+                  className="form-input"
+                  value={formData.theme}
+                  onChange={handleChange}
+                >
+                  <option value="">- Select the theme -</option>
+                  <option value="choosing-subject">Choosing subject</option>
+                  <option value="submitting-innovation-project">
+                    Submitting innovation project
+                  </option>
+                  <option value="managing-profile">Managing the profile</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label htmlFor="description">
+                  <i className="fas fa-align-left icon"></i> Description:
+                </label>
+                <textarea
+                  id="description"
+                  className="form-input"
+                  value={formData.description}
+                  onChange={handleChange}
+                  placeholder="Write here..."
+                ></textarea>
+              </div>
+              <div className="form-group">
+                <label htmlFor="dueDate">
+                  <i className="fas fa-calendar-alt icon"></i> Due date:
+                </label>
+                <input
+                  type="date"
+                  id="dueDate"
+                  className="form-input"
+                  value={formData.dueDate}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="email">
+                  <i className="fas fa-envelope icon"></i> Email:
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  className="form-input"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="Enter email..."
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="goTo">
+                  <i className="fas fa-link icon"></i> Go to:
+                </label>
+                <select
+                  id="goTo"
+                  className="form-input"
+                  value={formData.goTo}
+                  onChange={handleChange}
+                >
+                  <option value="">- Select the page -</option>
+                  <option value="subject-management">Subject management</option>
+                  <option value="profile">Profile</option>
+                  <option value="user-management">User management</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label htmlFor="role">
+                  <i className="fas fa-user-tag icon"></i> Assign to Role:
+                </label>
+                <select
+                  id="role"
+                  className="form-input"
+                  value={selectedRole}
+                  onChange={handleRoleChange}
+                >
+                  <option value="prof">Professor</option>
+                  <option value="student">Student</option>
+                  <option value="entreprise">Entreprise</option>
+                  <option value="proresponsable">Prof Responsable</option>
+                </select>
+              </div>
+            </form>
+          </div>
+          <div className="deadlines-list">
+            <h2>All Deadlines</h2>
+            {deadlines.length > 0 ? (
+              deadlines.map((deadline, index) => (
+                <div key={index} className="deadline-item">
+                  <h3>{deadline.theme}</h3>
+                  <p>{deadline.description}</p>
+                  <p><strong>Due Date:</strong> {deadline.dueDate}</p>
+                  <p><strong>Email:</strong> {deadline.email}</p>
+                  <p><strong>Role:</strong> {deadline.role}</p>
+                  <p><strong>Go To:</strong> {deadline.goTo}</p>
+                  <button className="form-button edit-button" onClick={() => handleEdit(index)}>
+                    Edit
+                  </button>
+                  <button className="form-button delete-button" onClick={() => handleDelete(index)}>
+                    Delete
+                  </button>
+                </div>
+              ))
+            ) : (
+              <p>No deadlines available.</p>
+            )}
+          </div>
+        </div>
+      ) : (
+        <div className="app-container">
+          <h1 className="page-title">Deadlines for {role}</h1>
+          {deadlines.length > 0 ? (
+            deadlines.map((deadline, index) => (
+              <div key={index} className="deadline-item">
+                <h3>{deadline.theme}</h3>
+                <p>{deadline.description}</p>
+                <p><strong>Due Date:</strong> {deadline.dueDate}</p>
+                <p><strong>Assigned By:</strong> Admin</p>
+              </div>
+            ))
           ) : (
-            <p>Select a date from the calendar</p>
+            <p>No deadlines available.</p>
           )}
         </div>
-
-        <div className="upcoming-dates">
-          <h4>Upcoming Dates</h4>
-          <hr className="calendar-separator" />
-          <ul>
-            <li>15/11/2024</li>
-            <li>17/11/2024</li>
-          </ul>
-        </div>
-      </div>
+      )}
     </div>
   );
 };

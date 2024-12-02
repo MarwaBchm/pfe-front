@@ -1,15 +1,22 @@
 import React from "react";
-import {
-  FaCalendarAlt,
-  FaAlignLeft,
-  FaClock,
-  FaEnvelope,
-} from "react-icons/fa";
-import "./defenseSchedule.css";
+import { FaCalendarAlt, FaAlignLeft, FaClock, FaEnvelope } from "react-icons/fa";
+import CalendarPage from "./CalendarPage"; // Import CalendarPage
+import "./defenseSchedule.css"; // Replace with your actual CSS
+
+const App = () => {
+  // Simulated user role (replace this logic with real authentication)
+  const userRole = "admin"; // Change this value to "admin", "prof", "profresponsable", "entreprise", or "student"
+
+  return (
+    <div className="app-container">
+      {userRole === "admin" ? <DefenseSchedule /> : <CalendarPage />}
+    </div>
+  );
+};
+
 const DefenseSchedule = () => {
   return (
     <div className="defense-schedule-container">
-      <h3>Defense Schedule</h3>
       <form className="defense-schedule-form">
         {/* Date Section */}
         <div className="form-group">
@@ -68,11 +75,7 @@ const DefenseSchedule = () => {
           <label htmlFor="description">
             <FaAlignLeft className="icon" /> Description:
           </label>
-          <textarea
-            id="description"
-            placeholder="Write here..."
-            rows="4"
-          ></textarea>
+          <textarea id="description" placeholder="Write here..." rows="4"></textarea>
         </div>
 
         {/* Time Section */}
@@ -108,4 +111,4 @@ const DefenseSchedule = () => {
   );
 };
 
-export default DefenseSchedule;
+export default App;

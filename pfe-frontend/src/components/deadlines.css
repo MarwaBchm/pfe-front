@@ -1,120 +1,140 @@
-.calendar-container {
-  display: flex;
-  flex-direction: column;
-  align-items: left;
+/* General styles */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f7f9fc;
+  margin: 0;
   padding: 20px;
+  box-sizing: border-box;
+}
+
+.app-container {
+  width: 800px;
+  margin: 20px 100px 0px;
   background: #fff;
+  padding: 35px;
   border-radius: 30px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  max-width: 800px;
-  margin: 0 auto;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.calendar-header {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  width: 95%;
-  margin-bottom: 30px;
-}
-
-.calendar-header button {
-  background: none;
-  border: none;
-  font-size: 2rem;
-  cursor: pointer;
-  background-color: #bb84f3;
-  border-radius: 30px;
-  color:#201455;
-}
-
-.calendar-header select {
-  padding: 10px;
-  border-radius: 30px;
-  border: 0px solid #ddd;
-  margin: 0 5px;
-  font-size: 1.1rem;
-  font-weight: bold;
-  background-color:#F4F7FE ;
-  color:#4318FF;
-}
-
-.calendar-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 30px;
-  width: 100%;
-}
-
-.calendar-separator {
-  border: 0;
-  height: 1px;
-  background: #6f696967;
-  margin: 20px 0; /* Adjust spacing as needed */
-  width: 100%;
-}
-
-
-.day-header {
-  font-weight: bold;
-  text-align: center;
-  color: #2B3674;
-  border-radius: 20px;
-}
-
-.day {
-  text-align: center;
-  padding: 15px;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: background 0.3s;
-  color:#2B3674 ;
-  font-weight: bold;
-}
-
-.day:hover {
-  background: #ddd;
-}
-
-.day.selected {
-  background: #6c63ff;
-  color: white;
-}
-
-.empty-day {
-  visibility: hidden;
-}
-
-.date-info {
+/* Header container (Title + Buttons) */
+.header-container {
   display: flex;
   justify-content: space-between;
-  width: 100%;
-  margin-top: 20px;
-}
-
-.selected-date,
-.upcoming-dates {
-  background: #F4F7FE ;
-  border-radius: 30px;
-  padding: 15px;
-  width: 40%;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.selected-date h4,
-.upcoming-dates h4 {
+  align-items: center;
   margin-bottom: 10px;
-  font-size: 1.2rem;
-  color: #4318FF;
 }
 
-.upcoming-dates ul {
-  list-style: none;
-  padding: 0;
+.page-title {
+  font-size: 1.5rem;
+  color: #0052cc;
+  font-weight: 500;
+  margin: 0;
 }
 
-.upcoming-dates li {
-  margin: 5px 0;
+/* Separator line */
+.separator {
+  border: 0;
+  border-top: 2px solid #ddd;
+  margin: 20px 0;
+}
+
+/* Form header (buttons) */
+.form-header {
+  display: flex;
+  gap: 10px;
+}
+
+.form-button {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 30px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  color: #fff;
+  transition: background-color 0.3s;
+}
+.deadline-item{
+  background-color: #f7f7f7;
+  padding:20px;
+  border-radius: 30px;
+  margin-bottom: 20px;
+  width: 400px;
+}
+.save-button {
+  background-color: #4318ff;
+}
+
+.save-button:hover {
+  background-color: #3a10e0;
+}
+
+.edit-button {
+  background-color: #4318ff;
+  margin-right: 9px;
+}
+
+.edit-button:hover {
+  background-color: #3a10e0;
+}
+
+.delete-button {
+  background-color: #3a10e0;
+}
+
+.delete-button:hover {
+  background-color: #c02d2d;
+}
+
+/* Form styling */
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form-group label {
   font-size: 1rem;
-  color: #555;
+  color: #2b3674;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.form-input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 30px;
+  background: #f7f7f7;
+  font-size: 1rem;
+  color: #7d7d7d;
+}
+
+textarea.form-input {
+  resize: none;
+  height: 80px;
+}
+
+select.form-input {
+  cursor: pointer;
+}
+
+/* Input focus */
+.form-input:focus {
+  outline: none;
+  border-color: #0052cc;
+  background-color: #ffffff;
+  color: #2b3674;
+  transition: border-color 0.3s, background-color 0.3s;
+}
+
+/* Placeholder styling */
+.form-input::placeholder {
+  color: #bcbcbc;
 }
