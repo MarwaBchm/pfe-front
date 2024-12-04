@@ -1,6 +1,7 @@
 import React, { useState, useLayoutEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom"; // Import useLocation for current route tracking
-
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 const sidebarItems = [
   {
     id: 1,
@@ -61,6 +62,7 @@ const sidebarItems = [
 ];
 
 const Sidebar = () => {
+  const navigate = useNavigate(); // For redirecting after logout
   const [isOpen, setIsOpen] = useState(true);
   const [activeItem, setActiveItem] = useState(1);
   const indicatorRef = useRef(null);
@@ -118,6 +120,33 @@ const Sidebar = () => {
     window.addEventListener("resize", updateIndicatorPosition);
     return () => window.removeEventListener("resize", updateIndicatorPosition);
   }, [activeItem, isOpen]);
+  const handleLogout = async () => {
+    try {
+      const token = localStorage.getItem("token"); // Retrieve the token from localStorage
+
+      if (!token) {
+        alert("No token found. Please log in.");
+        return;
+      }
+
+      await axios.post(
+        "http://127.0.0.1:8000/api/logout",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Send the token in the header
+          },
+          withCredentials: true,
+        }
+      );
+
+      localStorage.removeItem("token"); // Clear the token from localStorage
+      navigate("/"); // Redirect to login page
+    } catch (error) {
+      console.error("Logout failed:", error.response?.data || error.message);
+      alert("Logout failed. Please try again.");
+    }
+  };
 
   return (
     <div className="flex h-full">
@@ -163,37 +192,73 @@ const Sidebar = () => {
 
           {/* Navigation */}
           <nav className="space-y-2 mt-4">
-            {sidebarItems.map((item) => (
-              <Link
-                key={item.id}
-                to={item.path}
-                onClick={() => setActiveItem(item.id)}
-                className={`sidebar-item-${
-                  item.id
-                } relative flex flex-row items-center py-2 px-3 mx-2 cursor-pointer rounded ${
-                  item.isAction
-                    ? "text-white hover:bg-red-700"
-                    : "hover:bg-blue-50"
-                }`}
-              >
-                {/* Icon */}
-                <img
-                  src={activeItem === item.id ? item.selectedImage : item.image}
-                  alt={item.label}
-                  className="w-6 h-6 mr-3"
-                />
-                {/* Label */}
-                <span
-                  className={`${isOpen ? "block" : "hidden"} text-sm ${
-                    activeItem === item.id
-                      ? "text-blue-2 font-medium"
-                      : "text-gray-1 font-normal"
+            {sidebarItems.map((item) =>
+              item.label === "Sign Out" ? (
+                <Link
+                  key={item.id}
+                  to={item.path}
+                  onClick={handleLogout}
+                  className={`sidebar-item-${
+                    item.id
+                  } relative flex flex-row items-center py-2 px-3 mx-2 cursor-pointer rounded ${
+                    item.isAction
+                      ? "text-white hover:bg-red-700"
+                      : "hover:bg-blue-50"
                   }`}
                 >
-                  {item.label}
-                </span>
-              </Link>
-            ))}
+                  {/* Icon */}
+                  <img
+                    src={
+                      activeItem === item.id ? item.selectedImage : item.image
+                    }
+                    alt={item.label}
+                    className="w-6 h-6 mr-3"
+                  />
+                  {/* Label */}
+                  <span
+                    className={`${isOpen ? "block" : "hidden"} text-sm ${
+                      activeItem === item.id
+                        ? "text-blue-2 font-medium"
+                        : "text-gray-1 font-normal"
+                    }`}
+                  >
+                    {item.label}
+                  </span>
+                </Link>
+              ) : (
+                <Link
+                  key={item.id}
+                  to={item.path}
+                  onClick={() => setActiveItem(item.id)}
+                  className={`sidebar-item-${
+                    item.id
+                  } relative flex flex-row items-center py-2 px-3 mx-2 cursor-pointer rounded ${
+                    item.isAction
+                      ? "text-white hover:bg-red-700"
+                      : "hover:bg-blue-50"
+                  }`}
+                >
+                  {/* Icon */}
+                  <img
+                    src={
+                      activeItem === item.id ? item.selectedImage : item.image
+                    }
+                    alt={item.label}
+                    className="w-6 h-6 mr-3"
+                  />
+                  {/* Label */}
+                  <span
+                    className={`${isOpen ? "block" : "hidden"} text-sm ${
+                      activeItem === item.id
+                        ? "text-blue-2 font-medium"
+                        : "text-gray-1 font-normal"
+                    }`}
+                  >
+                    {item.label}
+                  </span>
+                </Link>
+              )
+            )}
           </nav>
         </div>
       </div>

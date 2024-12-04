@@ -10,12 +10,15 @@ import DefenseSchedule from "../components/defenseSchedule";
 import Deadlines from "../components/deadlines";
 import Settings from "../components/settings";
 import ProfilePage from "../components/profile";
+import Register from "../pages/register";
 
 const AppRoutes = () => {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+
         <Route path="/dashboard" element={<Dashboard />}>
           <Route path="home" element={<Home />} />
           <Route path="usersManagement" element={<UsersManagement />} />

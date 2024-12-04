@@ -1,33 +1,70 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Importing useNavigate from react-router-dom
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false); // Loading state for button
+  const navigate = useNavigate();
+  const csrfToken = document.head.querySelector(
+    'meta[name="csrf-token"]'
+  )?.content;
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      setError(""); // Reset error message
+      setLoading(true); // Start loading
 
-  const navigate = useNavigate(); // Declare navigate
+      if (!email || !password) {
+        setError("Please enter both email and password.");
+        setLoading(false);
+        return;
+      }
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setError(""); // Reset error message
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      if (!emailRegex.test(email)) {
+        setError("Please enter a valid email address.");
+        setLoading(false);
+        return;
+      }
 
-    // Basic validation check for both fields
-    if (!email || !password) {
-      setError("Please enter both email and password.");
-      return;
-    }
+      try {
+        // Fetch CSRF cookie first
+        await axios.get("http://127.0.0.1:8000/sanctum/csrf-cookie", {
+          withCredentials: true,
+        });
 
-    // Basic email format validation
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (!emailRegex.test(email)) {
-      setError("Please enter a valid email address.");
-      return;
-    }
+        // Send login request
+        const response = await axios.post(
+          "http://127.0.0.1:8000/api/login", // Backend login route
+          { email, password },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRF-TOKEN": csrfToken,
+            },
+            withCredentials: true, // Required for cookies to work
+          }
+        );
 
-    // Navigate to the Dashboard/Home after successful login
-    navigate("/dashboard/home"); // Replace '/dashboard' with your actual route
-  };
+        // Check for success and redirect
+        if (response.status === 200) {
+          navigate("/dashboard/home"); // Redirect to dashboard
+        }
+      } catch (error) {
+        // Backend error response handling
+        if (error.response && error.response.data) {
+          setError(
+            error.response.data.errors?.email?.[0] || "Invalid login credentials."
+          );
+        } else {
+          setError("An error occurred. Please try again.");
+        }
+      } finally {
+        setLoading(false); // Stop loading after request completes
+      }
+    };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-login-bg bg-center bg-cover">
@@ -75,9 +112,10 @@ const Login = () => {
           <p className="text-sm text-white">Forgot password?</p>
           <button
             type="submit"
-            className="w-full py-2 mt-7 text-white bg-blue-1 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 mb-4"
+            className="w-full py-2 mt-7 text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 mb-4"
+            disabled={loading} // Disable button during loading
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
       </div>
