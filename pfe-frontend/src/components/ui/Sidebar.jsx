@@ -26,27 +26,34 @@ const sidebarItems = [
   },
   {
     id: 4,
+    label: "Wish List",
+    image: "/icons/not-selected/list.png",
+    selectedImage: "/icons/selected/list.png",
+    path: "/dashboard/wishList",
+  },
+  {
+    id: 5,
     label: "Deadlines",
     image: "/icons/not-selected/defense.png",
     selectedImage: "/icons/selected/defense.png",
     path: "/dashboard/deadlines",
   },
   {
-    id: 5,
+    id: 6,
     label: "Defense Schedule",
     image: "/icons/not-selected/project.png",
     selectedImage: "/icons/selected/project.png",
     path: "/dashboard/defenseSchedule",
   },
   {
-    id: 6,
+    id: 7,
     label: "Emails",
     image: "/icons/not-selected/email.png",
     selectedImage: "/icons/selected/email.png",
     path: "/dashboard/emails",
   },
   {
-    id: 7,
+    id: 8,
     label: "Settings",
     image: "/icons/not-selected/settings.png",
     selectedImage: "/icons/selected/settings.png",
@@ -54,7 +61,7 @@ const sidebarItems = [
   },
 
   {
-    id: 8,
+    id: 9,
     label: "Sign Out",
     image: "/icons/not-selected/logout.png",
     selectedImage: "/icons/selected/logout.png",
