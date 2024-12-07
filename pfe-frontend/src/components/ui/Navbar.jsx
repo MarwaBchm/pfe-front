@@ -21,7 +21,7 @@ const Navbar = () => {
           <input
             type="text"
             placeholder="Search..."
-            className="px-4 py-1 pl-9 rounded-full bg-blue-3 w-36 focus:outline-none focus:w-64 transition-all duration-300 text-blue-2"
+            className="static  px-4 py-1  pl-9 rounded-full bg-blue-3 w-36 focus:outline-none focus:w-64  transition-all duration-500 text-blue-2"
           />
           <Icon
             src="/icons/selected/search.png"

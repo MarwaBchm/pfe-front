@@ -3,7 +3,7 @@ import AppRoutes from "./plugins/routes";
 
 function App() {
  
-  return <div><AppRoutes/></div>;
+  return <div className="z-0"><AppRoutes/></div>;
 }
 
 export default App;
