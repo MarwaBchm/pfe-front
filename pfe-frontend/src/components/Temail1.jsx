@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { useNavigate } from "react-router-dom";
 
 const AdminEmailSettings = () => {
   const [formData, setFormData] = useState({
@@ -9,7 +10,7 @@ const AdminEmailSettings = () => {
   });
 
   const [formStatus, setFormStatus] = useState("");
-
+  const navigate = useNavigate();
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -29,18 +30,50 @@ const AdminEmailSettings = () => {
     }
 
     const currentDate = new Date();
+    const startDate = new Date(emailStartDate);
     const closureDate = new Date(formClosureDate);
+
+    // Check if email start date is after the current date
+    if (startDate <= currentDate) {
+      setFormStatus("The email start date must be in the future.");
+      return;
+    }
+
+    if (startDate > closureDate) {
+      setFormStatus(
+        "The email start date cannot be after the form closure date."
+      );
+      return;
+    }
 
     if (closureDate < currentDate) {
       setFormStatus("The closure date cannot be in the past.");
       return;
     }
 
+    // Validate email reminder dates (comma-separated dates)
+    const reminderDatesArray = emailReminderDates
+      .split(",")
+      .map((date) => date.trim());
+    for (let dateStr of reminderDatesArray) {
+      const reminderDate = new Date(dateStr);
+      if (isNaN(reminderDate)) {
+        setFormStatus(`Invalid reminder date format: ${dateStr}`);
+        return;
+      }
+      if (reminderDate < currentDate) {
+        setFormStatus(`Reminder date ${dateStr} cannot be in the past.`);
+        return;
+      }
+    }
+
     // Simulate saving data (e.g., sending to the backend)
     console.log("Form Data Submitted:", formData);
     setFormStatus("Settings saved successfully!");
   };
-
+  const handleReviewPageClick = () => {
+    navigate("/dashboard/emails/"); // This will navigate to the /review page
+  };
   return (
     <div className="container mt-5">
       <h2 className="text-center mb-4">Automatic Email Settings</h2>
@@ -118,6 +151,12 @@ const AdminEmailSettings = () => {
               {formStatus}
             </div>
           )}
+          <button
+            onClick={handleReviewPageClick}
+            className="btn btn-secondary w-100 mt-3"
+          >
+            Go to Review Page
+          </button>
         </div>
       </div>
     </div>

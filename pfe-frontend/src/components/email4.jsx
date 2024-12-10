@@ -1,14 +1,28 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { useNavigate } from "react-router-dom";
 
-const EnterprisePFEProposals = () => {
-  const [proposals, setProposals] = useState([]);
+const PFEEmailForm = () => {
   const [formData, setFormData] = useState({
-    title: "",
-    options: "",
-    description: "",
+    subject: "Call for PFE Proposals",
+    type: [],
+    customMessage: "",
   });
+  const navigate = useNavigate();
   const [formStatus, setFormStatus] = useState("");
+  const [emailPreview, setEmailPreview] = useState(""); // Store generated email preview
+
+  const projectTypes = ["Students", "Professors", "Enterprise"];
+
+  const handleCheckboxChange = (e, type) => {
+    const isChecked = e.target.checked;
+    setFormData((prevData) => ({
+      ...prevData,
+      type: isChecked
+        ? [...prevData.type, type]
+        : prevData.type.filter((item) => item !== type),
+    }));
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -21,161 +35,134 @@ const EnterprisePFEProposals = () => {
   const handleFormSubmit = (e) => {
     e.preventDefault();
 
-    // Validation
-    const { title, description } = formData;
-    if (!title || !description) {
-      setFormStatus("All required fields must be filled out.");
+    if (!formData.subject || formData.type.length === 0) {
+      setFormStatus(
+        "Please fill in the subject and select at least one acteur."
+      );
       return;
     }
 
-    // Add new proposal
-    setProposals((prevProposals) => [
-      ...prevProposals,
-      { ...formData, id: Date.now() },
-    ]);
+    const emailContent = `
+      Subject: ${formData.subject}
+      ---------------------------------------------------------
+      Dear ${formData.type},
 
-    // Clear form
-    setFormData({ title: "", options: "", description: "" });
-    setFormStatus("Proposal submitted successfully!");
-  };
+      We are pleased to invite you to submit proposals for PFE projects for the upcoming academic session.
 
-  const handleDelete = (id) => {
-    setProposals((prevProposals) =>
-      prevProposals.filter((proposal) => proposal.id !== id)
+      ${formData.customMessage ? `Note: ${formData.customMessage}` : ""}
+
+      Access the platform to submit your proposals here: http://localhost:5173/dashboard/home.
+
+      Best regards,
+      PFE Management Team
+    `;
+
+    setEmailPreview(emailContent); // Set the generated email preview
+    setFormStatus(
+      "Email configured successfully! Check below for the preview."
     );
   };
-
-  const handleEdit = (id) => {
-    const proposalToEdit = proposals.find((proposal) => proposal.id === id);
-    setFormData(proposalToEdit);
-    setProposals((prevProposals) =>
-      prevProposals.filter((proposal) => proposal.id !== id)
-    );
+  const handleReviewPageClick = () => {
+    navigate("/dashboard/emails/"); // This will navigate to the /review page
   };
-
   return (
     <div className="container mt-5">
-      <h2 className="text-center mb-4">Enterprise PFE Proposals</h2>
-
-      {/* Proposal Form */}
-      <div className="card mb-4">
+      <div className="card">
         <div className="card-header bg-primary text-white text-center">
-          <h4>Submit a New Proposal</h4>
+          <h4>Configure PFE Call Email</h4>
         </div>
         <div className="card-body">
           <form onSubmit={handleFormSubmit}>
-            {/* Title */}
+            {/* Subject Input */}
             <div className="mb-3">
-              <label htmlFor="title" className="form-label">
-                Project Title:
+              <label htmlFor="subject" className="form-label">
+                Email Subject:
               </label>
               <input
                 type="text"
-                id="title"
-                name="title"
+                id="subject"
+                name="subject"
                 className="form-control"
-                placeholder="Enter the title of the project"
-                value={formData.title}
+                value={formData.subject}
                 onChange={handleInputChange}
                 required
               />
             </div>
 
-            {/* Options */}
+            {/* Checkbox Options */}
             <div className="mb-3">
-              <label htmlFor="options" className="form-label">
-                Options (Optional):
-              </label>
-              <input
-                type="text"
-                id="options"
-                name="options"
-                className="form-control"
-                placeholder="e.g., AI, Web Development, IoT"
-                value={formData.options}
-                onChange={handleInputChange}
-              />
+              <label className="form-label">Send To :</label>
+              {projectTypes.map((type) => (
+                <div className="form-check" key={type}>
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    id={type}
+                    value={type}
+                    checked={formData.type.includes(type)}
+                    onChange={(e) => handleCheckboxChange(e, type)}
+                  />
+                  <label className="form-check-label" htmlFor={type}>
+                    {type}
+                  </label>
+                </div>
+              ))}
             </div>
 
-            {/* Description */}
+            {/* Custom Message Input */}
             <div className="mb-3">
-              <label htmlFor="description" className="form-label">
-                Project Description:
+              <label htmlFor="customMessage" className="form-label">
+                Custom Message (optional):
               </label>
               <textarea
-                id="description"
-                name="description"
+                id="customMessage"
+                name="customMessage"
                 className="form-control"
-                placeholder="Provide a detailed description of the project"
                 rows="4"
-                value={formData.description}
+                placeholder="Add any additional information here..."
+                value={formData.customMessage}
                 onChange={handleInputChange}
-                required
               />
             </div>
 
             {/* Submit Button */}
             <button type="submit" className="btn btn-primary w-100">
-              Submit Proposal
+              Generate Email Preview
             </button>
           </form>
 
-          {/* Status Feedback */}
+          {/* Form Status */}
           {formStatus && (
             <div
               className={`mt-3 alert ${
-                formStatus.includes("success")
+                formStatus.includes("successfully")
                   ? "alert-success"
                   : "alert-danger"
               }`}
-              role="alert"
             >
               {formStatus}
             </div>
           )}
-        </div>
-      </div>
 
-      {/* Proposal List */}
-      <div>
-        <h4 className="mb-3">Your Submitted Proposals</h4>
-        {proposals.length > 0 ? (
-          <ul className="list-group">
-            {proposals.map((proposal) => (
-              <li
-                key={proposal.id}
-                className="list-group-item d-flex justify-content-between align-items-center"
-              >
-                <div>
-                  <strong>{proposal.title}</strong>
-                  <p className="mb-1">{proposal.description}</p>
-                  {proposal.options && (
-                    <small>Options: {proposal.options}</small>
-                  )}
-                </div>
-                <div>
-                  <button
-                    className="btn btn-secondary btn-sm me-2"
-                    onClick={() => handleEdit(proposal.id)}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className="btn btn-danger btn-sm"
-                    onClick={() => handleDelete(proposal.id)}
-                  >
-                    Delete
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>No proposals submitted yet.</p>
-        )}
+          {/* Email Preview */}
+          {emailPreview && (
+            <div className="mt-4">
+              <h5>Email Preview:</h5>
+              <div className="alert alert-secondary">
+                <pre>{emailPreview}</pre>
+              </div>
+            </div>
+          )}
+          <button
+            onClick={handleReviewPageClick}
+            className="btn btn-secondary w-100 mt-3"
+          >
+            Go to Review Page
+          </button>
+        </div>
       </div>
     </div>
   );
 };
 
-export default EnterprisePFEProposals;
+export default PFEEmailForm;
