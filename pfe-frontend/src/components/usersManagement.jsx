@@ -160,7 +160,7 @@ const UsersManagement = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
           <button
-            className="px-4 py-2 bg-blue-5 bg-opacity-80 text-white text-sm font-medium rounded-md"
+            className="px-4 py-1 bg-blue-5 bg-opacity-80 text-white text-sm font-medium rounded-md"
             onClick={() => switchActionWithAnimation("add")}
           >
             Add a new {userType.slice(0, -1)}

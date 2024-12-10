@@ -12,7 +12,7 @@ const Settings = () => {
       {" "}
       <div
         className="
-   w-full p-6 bg-white shadow  rounded-xl mt-6 bg-opacity-80"
+   w-full p-6 bg-white shadow  rounded-xl mt-6 bg-opacity-"
       >
         <h2 className="text-xl font-semibold   font-sans mb-2  text-left text-blue-1  ">
           My Account
