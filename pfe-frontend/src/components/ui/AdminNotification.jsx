@@ -39,7 +39,7 @@ const AdminNotification = () => {
 
   return (
     <div className="admin-notification-page">
-      <h2>Admin Notification Center</h2>
+      <h2><strong>Admin Notification Center</strong></h2>
 
       {/* Form Section */}
       <form className="notification-form" onSubmit={handleSend}>

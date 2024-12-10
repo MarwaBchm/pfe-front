@@ -8,8 +8,6 @@ const Deadlines = () => {
     theme: "",
     description: "",
     dueDate: "",
-    email: "",
-    goTo: "",
   });
   const [selectedRole, setSelectedRole] = useState("prof"); // Role to send the deadline to
   const [deadlines, setDeadlines] = useState([]); // Shared deadlines state
@@ -38,7 +36,7 @@ const Deadlines = () => {
       updatedDeadlines[editingIndex] = newDeadline; // Update existing deadline
       setDeadlines(updatedDeadlines);
     }
-    setFormData({ theme: "", description: "", dueDate: "", email: "", goTo: "" }); // Reset form
+    setFormData({ theme: "", description: "", dueDate: "" }); // Reset form
     setSelectedRole("prof");
     setEditingIndex(null);
   };
@@ -86,7 +84,7 @@ const Deadlines = () => {
                 className="form-button delete-button"
                 onClick={() => {
                   if (editingIndex !== null) {
-                    setFormData({ theme: "", description: "", dueDate: "", email: "", goTo: "" }); // Clear form
+                    setFormData({ theme: "", description: "", dueDate: "" }); // Clear form
                     setEditingIndex(null); // Cancel editing
                   }
                 }}
@@ -141,35 +139,6 @@ const Deadlines = () => {
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="email">
-                  <i className="fas fa-envelope icon"></i> Email:
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  className="form-input"
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder="Enter email..."
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="goTo">
-                  <i className="fas fa-link icon"></i> Go to:
-                </label>
-                <select
-                  id="goTo"
-                  className="form-input"
-                  value={formData.goTo}
-                  onChange={handleChange}
-                >
-                  <option value="">- Select the page -</option>
-                  <option value="subject-management">Subject management</option>
-                  <option value="profile">Profile</option>
-                  <option value="user-management">User management</option>
-                </select>
-              </div>
-              <div className="form-group">
                 <label htmlFor="role">
                   <i className="fas fa-user-tag icon"></i> Assign to Role:
                 </label>
@@ -195,9 +164,7 @@ const Deadlines = () => {
                   <h3>{deadline.theme}</h3>
                   <p>{deadline.description}</p>
                   <p><strong>Due Date:</strong> {deadline.dueDate}</p>
-                  <p><strong>Email:</strong> {deadline.email}</p>
                   <p><strong>Role:</strong> {deadline.role}</p>
-                  <p><strong>Go To:</strong> {deadline.goTo}</p>
                   <button className="form-button edit-button" onClick={() => handleEdit(index)}>
                     Edit
                   </button>

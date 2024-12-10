@@ -125,10 +125,13 @@ const NotificationPage = ({ isAdmin = false }) => {
       {/* Styles */}
       <style jsx>{`
         .notification-page {
-          padding: 20px;
+          padding: 30px;
           font-family: Arial, sans-serif;
           margin: 0 auto;
           width: 300px;
+          background-color: white;
+          border-radius:30px;
+          border:1px solid #ccc;
         }
         h2 {
           text-align: left;
@@ -168,7 +171,7 @@ const NotificationPage = ({ isAdmin = false }) => {
           display: block;
           margin: 0 auto;
           padding: 10px 20px;
-          background-color: #007bff;
+          background-color: #3a10e0;
           color: white;
           border: none;
           border-radius: 15px;
@@ -211,7 +214,7 @@ const NotificationPage = ({ isAdmin = false }) => {
         }
         .close-button {
           color: white;
-          background-color: #007bff;
+          background-color: #3a10e0;
           width: 70px;
           height: 30px;
           margin-top: 15px;
