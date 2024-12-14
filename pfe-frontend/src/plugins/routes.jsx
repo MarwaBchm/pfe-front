@@ -33,6 +33,8 @@ const AppRoutes = () => {
           <Route path="emails" element={<Emails />}>
             {/* <Route path="Temail1" element={<AdminEmailSettings />} />
             <Route path="Temail2" element={<PFEProposals />} /> */}
+            {/* <Route path="/email3" element={<AddUserForm />} />
+            <Route path="/email1" element={<AdminEmailSettings />} /> */}
           </Route>
 
           <Route path="defenseSchedule" element={<DefenseSchedule />} />
