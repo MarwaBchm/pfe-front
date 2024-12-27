@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 // import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
-
+import "./emails.css";
 const PFEEmailForm = () => {
   const [formData, setFormData] = useState({
     subject: "Call for PFE Proposals",
