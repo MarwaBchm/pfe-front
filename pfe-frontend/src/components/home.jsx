@@ -25,25 +25,8 @@ ChartJS.register(
 // Mock data for PFE project statistics
 const mockProjectStats = {
   departments: {
-    all: {
-      totalProjects: 42,
-      completedProjects: 28,
-      inProgressProjects: 12,
-      pendingProjects: 2,
-      students: { picked: 32, notPicked: 10 },
-      professors: { suggested: 8, notSuggested: 4 },
-      topics: { chosen: 30, notChosen: 12 },
-      projectCompletionData: [
-        { date: "Jan", completed: 5, inProgress: 7 },
-        { date: "Feb", completed: 8, inProgress: 9 },
-        { date: "Mar", completed: 12, inProgress: 10 },
-        { date: "Apr", completed: 15, inProgress: 11 },
-        { date: "May", completed: 18, inProgress: 12 },
-        { date: "Jun", completed: 22, inProgress: 14 },
-        { date: "Jul", completed: 28, inProgress: 15 },
-      ],
-    },
     GenieLogiciel: {
+      name: "Genie Logiciel",
       totalProjects: 15,
       completedProjects: 10,
       inProgressProjects: 4,
@@ -57,7 +40,8 @@ const mockProjectStats = {
         { date: "Mar", completed: 8, inProgress: 7 },
       ],
     },
-    ArtificialIntelegence: {
+    ArtificialIntelligence: {
+      name: "Artificial Intelligence",
       totalProjects: 10,
       completedProjects: 6,
       inProgressProjects: 3,
@@ -72,6 +56,7 @@ const mockProjectStats = {
       ],
     },
     Reseau: {
+      name: "Reseau",
       totalProjects: 8,
       completedProjects: 5,
       inProgressProjects: 2,
@@ -86,6 +71,7 @@ const mockProjectStats = {
       ],
     },
     SystemDinformation: {
+      name: "System D'information",
       totalProjects: 9,
       completedProjects: 7,
       inProgressProjects: 1,
@@ -102,19 +88,20 @@ const mockProjectStats = {
   },
 };
 
-function StatCard({ title, value, icon }) {
-  return (
-    <div className="bg-white shadow-lg rounded-lg p-4 flex items-center justify-between hover:shadow-xl transition">
-      <div>
-        <h3 className="text-gray-500 text-sm">{title}</h3>
-        <p className="text-3xl font-bold text-gray-800">{value}</p>
-      </div>
-      <div className="text-4xl text-blue-500">{icon}</div>
+// Components
+const StatCard = ({ title, value, icon, bgColor }) => (
+  <div
+    className={`p-6 rounded-lg shadow-lg flex items-center justify-between ${bgColor}`}
+  >
+    <div>
+      <h3 className="text-sm font-medium text-white">{title}</h3>
+      <p className="text-3xl font-bold text-white">{value}</p>
     </div>
-  );
-}
+    <div className="text-5xl text-white">{icon}</div>
+  </div>
+);
 
-function ProjectCompletionChart({ data }) {
+const ProjectCompletionChart = ({ data }) => {
   const chartData = {
     labels: data.map((item) => item.date),
     datasets: [
@@ -136,8 +123,8 @@ function ProjectCompletionChart({ data }) {
   };
 
   return (
-    <div className="bg-white shadow-lg rounded-lg p-6">
-      <h2 className="text-xl font-semibold mb-4">Project Proposal Over Time</h2>
+    <div className="p-6 bg-white shadow-lg rounded-lg">
+      <h3 className="text-lg font-semibold mb-4">Project Progress</h3>
       <Line
         data={chartData}
         options={{
@@ -149,95 +136,161 @@ function ProjectCompletionChart({ data }) {
       />
     </div>
   );
-}
+};
 
+// Role-Based Dashboards
+const AdminDashboard = ({ stats, departments, setDepartment }) => (
+  <div>
+    <h2 className="text-2xl font-bold mb-6">Admin Dashboard</h2>
+    <div className="flex space-x-4 mb-6">
+      {departments.map((dept) => (
+        <button
+          key={dept}
+          onClick={() => setDepartment(dept)}
+          className={`px-6 py-2 rounded ${
+            stats.name === dept
+              ? "bg-blue-600 text-white"
+              : "bg-gray-200 text-gray-700"
+          }`}
+        >
+          {dept}
+        </button>
+      ))}
+    </div>
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <StatCard
+        title="Total Projects"
+        value={stats.totalProjects}
+        icon="📊"
+        bgColor="bg-blue-500"
+      />
+      <StatCard
+        title="Validated Projects"
+        value={stats.completedProjects}
+        icon="✅"
+        bgColor="bg-green-500"
+      />
+      <StatCard
+        title="Proposed Projects"
+        value={stats.inProgressProjects}
+        icon="🔄"
+        bgColor="bg-yellow-500"
+      />
+      <StatCard
+        title="Pending Projects"
+        value={stats.pendingProjects}
+        icon="⏳"
+        bgColor="bg-red-500"
+      />
+    </div>
+    <div className="mt-6">
+      <ProjectCompletionChart data={stats.projectCompletionData} />
+    </div>
+  </div>
+);
 
-function Home() {
-  const [selectedDepartment, setSelectedDepartment] = useState("all");
+const ProfResponsableDashboard = ({ stats }) => (
+  <div>
+    <h2 className="text-2xl font-bold mb-6">ProfResponsable Dashboard</h2>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <StatCard
+        title="Students Picked Topics"
+        value={stats.students.picked}
+        icon="👨‍🎓"
+        bgColor="bg-indigo-500"
+      />
+      <StatCard
+        title="Students Without Topics"
+        value={stats.students.notPicked}
+        icon="❌"
+        bgColor="bg-purple-500"
+      />
+    </div>
+    <div className="mt-6">
+      <ProjectCompletionChart data={stats.projectCompletionData} />
+    </div>
+  </div>
+);
 
+const StudentDashboard = ({ stats }) => (
+  <div>
+    <h2 className="text-2xl font-bold mb-6">Student Dashboard</h2>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <StatCard
+        title="Picked Topics"
+        value={stats.students.picked}
+        icon="✔️"
+        bgColor="bg-green-500"
+      />
+      <StatCard
+        title="Pending Topics"
+        value={stats.students.notPicked}
+        icon="❌"
+        bgColor="bg-yellow-500"
+      />
+    </div>
+  </div>
+);
+
+const ProfessorDashboard = ({ stats }) => (
+  <div>
+    <h2 className="text-2xl font-bold mb-6">Professor Dashboard</h2>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <StatCard
+        title="Suggested Topics"
+        value={stats.professors.suggested}
+        icon="📜"
+        bgColor="bg-blue-500"
+      />
+      <StatCard
+        title="Not Suggested"
+        value={stats.professors.notSuggested}
+        icon="🤔"
+        bgColor="bg-gray-500"
+      />
+    </div>
+  </div>
+);
+
+// Main Component
+const Home = () => {
+  const [userRole, setUserRole] = useState("Admin");
+  const [selectedDepartment, setSelectedDepartment] = useState("GenieLogiciel");
+
+  const departments = Object.keys(mockProjectStats.departments);
   const stats = mockProjectStats.departments[selectedDepartment];
 
   return (
-    <div className="min-h-screen  w-full">
+    <div className="min-h-screen w-full bg-gray-100">
+      <div className="bg-white shadow-sm py-4 flex justify-center space-x-4 mb-6">
+        {["Admin", "Student", "Professor", "ProfResponsable"].map((role) => (
+          <button
+            key={role}
+            onClick={() => setUserRole(role)}
+            className={`px-6 py-2 rounded ${
+              userRole === role
+                ? "bg-blue-600 text-white"
+                : "bg-gray-200 text-gray-700"
+            }`}
+          >
+            {role}
+          </button>
+        ))}
+      </div>
       <main className="container mx-auto p-6">
-        {/* Department Switcher */}
-        <div className="flex justify-between mb-6 w-full">
-          {Object.keys(mockProjectStats.departments).map((dept) => (
-            <button
-              key={dept}
-              className={`px-9 py-2 rounded ${
-                selectedDepartment === dept
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-200 text-gray-700"
-              }`}
-              onClick={() => setSelectedDepartment(dept)}
-            >
-              {dept === "all" ? "All Majors" : dept}
-            </button>
-          ))}
-        </div>
-
-        {/* Statistics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-          <StatCard
-            title="Total Projects"
-            value={stats.totalProjects}
-            icon="📊"
+        {userRole === "Admin" && (
+          <AdminDashboard
+            stats={stats}
+            departments={departments}
+            setDepartment={setSelectedDepartment}
           />
-          <StatCard
-            title="Validated Projects"
-            value={stats.completedProjects}
-            icon="✅"
-          />
-          <StatCard
-            title="Proposed Projects"
-            value={stats.inProgressProjects}
-            icon="🔄"
-          />
-          <StatCard title="Pending" value={stats.pendingProjects} icon="⏳" />
-        </div>
-
-        {/* Project Completion Chart */}
-        <div className="w-full mb-10">
-          <ProjectCompletionChart data={stats.projectCompletionData} />
-        </div>
-
-        {/* Additional Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <StatCard
-            title="Students Picked Topics"
-            value={stats.students.picked}
-            icon="👨‍🎓"
-          />
-          <StatCard
-            title="Students Didn't Pick"
-            value={stats.students.notPicked}
-            icon="❌"
-          />
-          <StatCard
-            title="Professors Suggested Topics"
-            value={stats.professors.suggested}
-            icon="📜"
-          />
-          <StatCard
-            title="Professors Didn't Suggest"
-            value={stats.professors.notSuggested}
-            icon="🤔"
-          />
-          <StatCard
-            title="Topics Chosen"
-            value={stats.topics.chosen}
-            icon="✔️"
-          />
-          <StatCard
-            title="Topics Not Chosen"
-            value={stats.topics.notChosen}
-            icon="🚫"
-          />
-        </div>
+        )}
+        {userRole === "Student" && <StudentDashboard stats={stats} />}
+        {userRole === "Professor" && <ProfessorDashboard stats={stats} />}
+        {userRole === "ProfResponsable" && <ProfResponsableDashboard stats={stats} />}
       </main>
     </div>
   );
-}
+};
 
 export default Home;
