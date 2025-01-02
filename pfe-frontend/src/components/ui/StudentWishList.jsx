@@ -133,7 +133,7 @@ function StudentWishList() {
           🛈 You will receive the result of your PFE project via email 📧 on
           January 12, 2025.
         </span>
-        <img src="/wishList.png" className="w-56 fixed bottom-1 right-3" />
+        <img src="/wishListStudent.png" className="w-56 fixed bottom-1 right-3" />
         
         <div className="mt-4 w-full bg-white p-4 rounded-xl shadow-md ">
           {selectedTopic ? (
