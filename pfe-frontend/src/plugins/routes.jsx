@@ -29,8 +29,6 @@ const AppRoutes = () => {
           <Route path="settings" element={<Settings />} />
           <Route path="profile" element={<ProfilePage />} />
           <Route path="wishList" element={<WishList />} />
-
-
         </Route>
       </Routes>
     </Router>
