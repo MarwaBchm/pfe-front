@@ -5,19 +5,19 @@ const mockStudents = [
     id: 1,
     name: "Alice Smith",
     major: "AI",
-    topChoice: "AI",
+    topChoice: "Chatbot AI",
   },
   {
     id: 2,
     name: "Bob Johnson",
     major: "GL",
-    topChoice: "SIC",
+    topChoice: "Cloud Inventory",
   },
   {
     id: 3,
     name: "Charlie Brown",
     major: "RSD",
-    topChoice: "GL",
+    topChoice: "Data Streaming",
   },
 ];
 
@@ -44,9 +44,10 @@ function AdminWishList() {
 
   const filteredStudents = useMemo(() => {
     return mockStudents.filter((student) => {
-      const matchesSearch = student.name
-        .toLowerCase()
-        .includes(studentSearch.toLowerCase());
+      const matchesSearch =
+        student.name.toLowerCase().includes(studentSearch.toLowerCase()) ||
+        student.major.toLowerCase().includes(studentSearch.toLowerCase()) ||
+        student.topChoice.toLowerCase().includes(studentSearch.toLowerCase());
       const matchesMajor =
         majorFilter === "All" || student.major === majorFilter;
       return matchesSearch && matchesMajor;
@@ -55,9 +56,9 @@ function AdminWishList() {
 
   const filteredProfessors = useMemo(() => {
     return mockProfessors.filter((professor) => {
-      const matchesSearch = professor.name
-        .toLowerCase()
-        .includes(professorSearch.toLowerCase());
+      const matchesSearch =
+        professor.name.toLowerCase().includes(professorSearch.toLowerCase()) ||
+        professor.grade.toLowerCase().includes(professorSearch.toLowerCase());
       const matchesGrade =
         gradeFilter === "All" || professor.grade === gradeFilter;
       return matchesSearch && matchesGrade;
@@ -74,7 +75,7 @@ function AdminWishList() {
       <div className="flex gap-4 mb-6">
         <input
           type="text"
-          placeholder="🔍   Search Students..."
+          placeholder="🔍   Search Students by Name, Major, or Top Choice..."
           value={studentSearch}
           onChange={(e) => setStudentSearch(e.target.value)}
           className="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:border-blue-4 text-blue-2 font-Roboto"
@@ -82,7 +83,7 @@ function AdminWishList() {
 
         <input
           type="text"
-          placeholder=" 🔍   Search Professors..."
+          placeholder=" 🔍   Search Professors by Name or Grade..."
           value={professorSearch}
           onChange={(e) => setProfessorSearch(e.target.value)}
           className="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:border-blue-4 text-blue-2 font-Roboto"
@@ -108,21 +109,30 @@ function AdminWishList() {
               <option value="RSD">RSD</option>
             </select>
           </div>
+          <div className=" flex justify-between items-center p-2 pb-0 border-b  text-gray-2 text-12 font-medium">
+            <h2 className=" w-1/2">Full Name </h2>
+            <h2 className=" w-1/4">Major </h2>
+            <h2 className=" w-1/4">Top Choice</h2>
+          </div>
           {filteredStudents.map((student) => (
             <div
               key={student.id}
               className="flex justify-between items-center p-2 border-b last:border-none cursor-pointer hover:bg-gray-100"
               onClick={() => setSelectedStudent(student)}
             >
-              <span>{student.name}</span>
-              <span className="text-sm text-gray-500">{student.major}</span>
-              <span className="text-sm text-blue-500">{student.topChoice}</span>
+              <span className=" w-1/2 text-blue-1 text-16">{student.name}</span>
+              <span className="text-sm text-gray-500 w-1/4 ">
+                {student.major}
+              </span>
+              <span className="text-sm text-slate-700 w-1/4">
+                {student.topChoice}
+              </span>
             </div>
           ))}
         </div>
 
         <div className="bg-white shadow rounded py-2 px-4">
-          <div className=" flex flex-row  justify-between items-center w-full ">
+          <div className=" flex flex-row  justify-between items-center w-full mb-2 ">
             <h2 className="text-lg font-semibold font-sans text-blue-2 ">
               {" "}
               👨‍🏫 Professors
@@ -137,14 +147,22 @@ function AdminWishList() {
               <option value="Associate Professor">Associate Professor</option>
             </select>
           </div>
+          <div className=" flex justify-between items-center p-2 pb-0 border-b  text-gray-2 text-12 font-medium">
+            <h2 className=" w-3/5">Full Name </h2>
+            <h2 className=" w-2/5">Grade </h2>
+          </div>
           {filteredProfessors.map((professor) => (
             <div
               key={professor.id}
               className="flex justify-between items-center p-2 border-b last:border-none cursor-pointer hover:bg-gray-100"
               onClick={() => setSelectedProfessor(professor)}
             >
-              <span>{professor.name}</span>
-              <span className="text-sm text-gray-500">{professor.grade}</span>
+              <span className=" w-3/5 text-blue-1 text-16">
+                {professor.name}
+              </span>
+              <span className="text-sm text-slate-700 w-2/5">
+                {professor.grade}
+              </span>
             </div>
           ))}
         </div>
