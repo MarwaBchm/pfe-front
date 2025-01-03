@@ -54,6 +54,13 @@ const sidebarItems = [
   },
   {
     id: 8,
+    label: "Options Management",
+    image: "/icons/not-selected/options.png",
+    selectedImage: "/icons/selected/options.png",
+    path: "/dashboard/optionsManagement",
+  },
+  {
+    id: 9,
     label: "Settings",
     image: "/icons/not-selected/settings.png",
     selectedImage: "/icons/selected/settings.png",
@@ -61,7 +68,7 @@ const sidebarItems = [
   },
 
   {
-    id: 9,
+    id: 10,
     label: "Sign Out",
     image: "/icons/not-selected/logout.png",
     selectedImage: "/icons/selected/logout.png",

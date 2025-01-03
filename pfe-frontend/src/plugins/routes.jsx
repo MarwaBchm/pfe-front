@@ -12,6 +12,7 @@ import Settings from "../components/settings";
 import ProfilePage from "../components/profile";
 import Register from "../pages/register";
 import WishList from "../components/wishList";
+import OptionsManagement from "../components/optionsManagement";
 const AppRoutes = () => {
   return (
     <Router>
@@ -29,6 +30,8 @@ const AppRoutes = () => {
           <Route path="settings" element={<Settings />} />
           <Route path="profile" element={<ProfilePage />} />
           <Route path="wishList" element={<WishList />} />
+          <Route path="optionsManagement" element={<OptionsManagement />} />
+
 
 
         </Route>
