@@ -19,8 +19,8 @@ import NonSelectionNotificationForm from "../components/email8";
 import PFEProposalForm from "../components/email9";
 import PFEVALIDATION from "../components/email10";/*10*/ 
 import PFEEmailNotification from "../components/email11";
-import PFEEmailNotification2 from "../components/email12";
-import PFEEventNotification from "../components/email13";
+import PFEEmailNotification2 from "../components/email12";/*12*/
+import PFEEventNotification from "../components/email13";/*13*/
 const AppRoutes = () => {
   return (
     <Router>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-// import "bootstrap/dist/css/bootstrap.min.css";
+import "./PEFInfoNotification.css"; // Import your custom CSS
 
 const PFEInfoNotification = () => {
   const [students, setStudents] = useState([]); // Liste des étudiants
@@ -86,20 +86,8 @@ const PFEInfoNotification = () => {
         (project) => project.id === student.projectId
       );
       if (studentProject) {
-        const message = `
-          Bonjour ${student.name},
+        const message = `Bonjour ${student.name},\n\nVoici les informations pour votre présentation de PFE :\n- Projet : ${studentProject.name}\n- Date : ${studentProject.date}\n- Heure : ${studentProject.time}\n- Salle : ${studentProject.room}\n\nMerci de vous préparer en conséquence.\n\nCordialement,\nL’équipe de gestion des PFE`;
 
-          Voici les informations pour votre présentation de PFE :
-          - Projet : ${studentProject.name}
-          - Date : ${studentProject.date}
-          - Heure : ${studentProject.time}
-          - Salle : ${studentProject.room}
-
-          Merci de vous préparer en conséquence.
-
-          Cordialement,
-          L’équipe de gestion des PFE
-        `;
         emailMessages.push({
           subject: `Informations sur votre PFE - ${studentProject.name}`,
           message,
@@ -113,20 +101,8 @@ const PFEInfoNotification = () => {
       teacher.projectIds.forEach((projectId) => {
         const project = projects.find((p) => p.id === projectId);
         if (project) {
-          const message = `
-            Bonjour ${teacher.name},
+          const message = `Bonjour ${teacher.name},\n\nVoici les informations concernant le projet PFE supervisé par vous :\n- Projet : ${project.name}\n- Date : ${project.date}\n- Heure : ${project.time}\n- Salle : ${project.room}\n\nMerci pour votre suivi et votre préparation.\n\nCordialement,\nL’équipe de gestion des PFE`;
 
-            Voici les informations concernant le projet PFE supervisé par vous :
-            - Projet : ${project.name}
-            - Date : ${project.date}
-            - Heure : ${project.time}
-            - Salle : ${project.room}
-
-            Merci pour votre suivi et votre préparation.
-
-            Cordialement,
-            L’équipe de gestion des PFE
-          `;
           emailMessages.push({
             subject: `Informations sur le PFE supervisé - ${project.name}`,
             message,
@@ -141,20 +117,8 @@ const PFEInfoNotification = () => {
       company.projectIds.forEach((projectId) => {
         const project = projects.find((p) => p.id === projectId);
         if (project) {
-          const message = `
-            Bonjour ${company.name},
+          const message = `Bonjour ${company.name},\n\nVoici les informations concernant le projet PFE en partenariat avec votre entreprise :\n- Projet : ${project.name}\n- Date : ${project.date}\n- Heure : ${project.time}\n- Salle : ${project.room}\n\nMerci pour votre collaboration.\n\nCordialement,\nL’équipe de gestion des PFE`;
 
-            Voici les informations concernant le projet PFE en partenariat avec votre entreprise :
-            - Projet : ${project.name}
-            - Date : ${project.date}
-            - Heure : ${project.time}
-            - Salle : ${project.room}
-
-            Merci pour votre collaboration.
-
-            Cordialement,
-            L’équipe de gestion des PFE
-          `;
           emailMessages.push({
             subject: `Informations sur le PFE en partenariat - ${project.name}`,
             message,
@@ -170,23 +134,20 @@ const PFEInfoNotification = () => {
   };
 
   return (
-    <div className="container mt-5">
+    <div className="container">
       <div className="card">
-        <div className="card-header bg-warning text-white text-center">
+        <div className="card-header notification-header">
           <h4>Notification par Email pour les Informations de PFE</h4>
         </div>
         <div className="card-body">
-          <button
-            onClick={handleGenerateEmails}
-            className="btn btn-warning w-100"
-          >
+          <button onClick={handleGenerateEmails} className="btn btn-generate">
             Générer les emails
           </button>
 
           {formStatus && (
             <div
-              className={`mt-3 alert ${
-                formStatus.includes("succès") ? "alert-success" : "alert-danger"
+              className={`status-message ${
+                formStatus.includes("succès") ? "success" : "error"
               }`}
             >
               {formStatus}
@@ -195,10 +156,10 @@ const PFEInfoNotification = () => {
 
           {/* Affichage des emails générés */}
           {generatedEmails && (
-            <div className="mt-3">
+            <div className="emails-generated">
               <h5>Emails générés :</h5>
               {generatedEmails.map((email, index) => (
-                <div key={index} className="alert alert-secondary">
+                <div key={index} className="email-card">
                   <h6>À : {email.recipient}</h6>
                   <p>
                     <strong>Objet:</strong> {email.subject}

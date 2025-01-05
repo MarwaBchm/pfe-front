@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import AdminEmailSettings from "./Temail1";
 import PFEVALIDATION from "../components/email10";
+import PFEEventNotification from "../components/email13";
+
 import "./emails.css";
 
 const OutlinedAlerts = () => {
@@ -30,7 +32,8 @@ const OutlinedAlerts = () => {
       label: "Jury Assignment Notification",
       link: "http://localhost:5173/email12/",
     },
-    { label: "PFE Event Notification", link: "http://localhost:5173/email13/" },
+
+    { label: "PFE Event Notification", key: "pefeventnotification" },
   ];
 
   const handleTemplateClick = (template) => {
@@ -154,6 +157,8 @@ const OutlinedAlerts = () => {
           <AdminEmailSettings />
         ) : dynamicContent === "pfeValidation" ? (
           <PFEVALIDATION />
+        ) : dynamicContent === "pefeventnotification" ? (
+          <PFEEventNotification />
         ) : (
           renderEmailForm()
         )}
