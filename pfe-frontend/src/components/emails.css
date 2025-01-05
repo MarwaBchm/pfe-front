@@ -198,3 +198,134 @@
 .form-input {
   margin-bottom: 10px;
 }
+/* General Container */
+.form-container {
+  background-color: #ffffff; /* White background for a clean look */
+  border-radius: 8px; /* Rounded corners */
+  padding: 20px 25px; /* Padding for spacing */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  margin: 20px auto; /* Center alignment */
+  max-width: 600px; /* Limit width for readability */
+  font-family: 'Arial', sans-serif; /* Clean and modern font */
+}
+
+/* Form Header */
+.form-container h3 {
+  font-size: 1.8rem; /* Larger header font */
+  margin-bottom: 20px; /* Spacing below the header */
+  color: #333; /* Dark text color */
+  text-align: center; /* Center align header */
+}
+
+/* Form Group */
+.form-group {
+  margin-bottom: 15px; /* Space between input fields */
+}
+
+/* Labels */
+.form-label {
+  font-size: 1rem; /* Standard font size */
+  font-weight: 600; /* Bold labels */
+  display: block; /* Block-level for spacing */
+  margin-bottom: 5px; /* Spacing below labels */
+  color: #555; /* Subtle dark gray */
+}
+
+/* Inputs and Textareas */
+.form-input {
+  width: 100%; /* Full width */
+  padding: 10px; /* Inner padding */
+  font-size: 1rem; /* Standard text size */
+  border: 1px solid #ccc; /* Light gray border */
+  border-radius: 5px; /* Rounded input edges */
+  transition: border-color 0.3s ease; /* Smooth focus effect */
+}
+
+.form-input:focus {
+  outline: none; /* Remove outline */
+  border-color: #007bff; /* Blue border on focus */
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.5); /* Subtle glow */
+}
+
+/* Checkboxes */
+.checkbox-row {
+  display: flex; /* Horizontal alignment */
+  flex-wrap: wrap; /* Wrap if necessary */
+  gap: 10px; /* Space between checkboxes */
+}
+
+.checkbox-group {
+  display: flex; /* Inline flex for alignment */
+  align-items: center; /* Vertical alignment */
+}
+
+.checkbox-input {
+  margin-right: 5px; /* Space between checkbox and label */
+}
+
+.checkbox-label {
+  font-size: 0.95rem; /* Slightly smaller text */
+  color: #555; /* Subtle dark gray */
+}
+
+/* Textarea */
+textarea {
+  resize: vertical; /* Allow vertical resizing */
+  min-height: 100px; /* Set minimum height */
+}
+
+/* Submit Button */
+.btn-primary {
+  display: block; /* Full-width button */
+  width: 100%; /* Span full width */
+  padding: 10px 15px; /* Inner padding */
+  font-size: 1rem; /* Button text size */
+  color: #ffffff; /* White text */
+  background-color: #007bff; /* Blue background */
+  border: none; /* No border */
+  border-radius: 5px; /* Rounded edges */
+  cursor: pointer; /* Pointer cursor */
+  transition: background-color 0.3s ease; /* Smooth hover effect */
+}
+
+.btn-primary:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Alert Box */
+.alert-box {
+  margin-top: 15px; /* Spacing above alerts */
+  padding: 10px 15px; /* Inner padding */
+  border-radius: 5px; /* Rounded edges */
+  font-size: 0.95rem; /* Standard font size */
+}
+
+.alert-success {
+  background-color: #d4edda; /* Light green */
+  color: #155724; /* Dark green text */
+  border: 1px solid #c3e6cb; /* Green border */
+}
+
+.alert-danger {
+  background-color: #f8d7da; /* Light red */
+  color: #721c24; /* Dark red text */
+  border: 1px solid #f5c6cb; /* Red border */
+}
+
+.alert-secondary {
+  background-color: #e2e3e5; /* Light gray */
+  color: #383d41; /* Dark gray text */
+  border: 1px solid #d6d8db; /* Gray border */
+}
+
+/* Email Preview Section */
+.email-preview {
+  margin-top: 20px; /* Space above preview */
+  background-color: #f8f9fa; /* Light background */
+  padding: 15px; /* Inner padding */
+  border-radius: 5px; /* Rounded edges */
+  font-family: 'Courier New', Courier, monospace; /* Monospace font for email */
+  font-size: 0.9rem; /* Slightly smaller text */
+  color: #212529; /* Dark text */
+  white-space: pre-wrap; /* Preserve line breaks */
+}

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-// import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
 
 const AdminEmailSettings = () => {
@@ -11,6 +10,7 @@ const AdminEmailSettings = () => {
 
   const [formStatus, setFormStatus] = useState("");
   const navigate = useNavigate();
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -21,9 +21,9 @@ const AdminEmailSettings = () => {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
+    const { emailStartDate, emailReminderDates, formClosureDate } = formData;
 
     // Validation
-    const { emailStartDate, emailReminderDates, formClosureDate } = formData;
     if (!emailStartDate || !emailReminderDates || !formClosureDate) {
       setFormStatus("All fields are required.");
       return;
@@ -33,7 +33,6 @@ const AdminEmailSettings = () => {
     const startDate = new Date(emailStartDate);
     const closureDate = new Date(formClosureDate);
 
-    // Check if email start date is after the current date
     if (startDate <= currentDate) {
       setFormStatus("The email start date must be in the future.");
       return;
@@ -51,7 +50,6 @@ const AdminEmailSettings = () => {
       return;
     }
 
-    // Validate email reminder dates (comma-separated dates)
     const reminderDatesArray = emailReminderDates
       .split(",")
       .map((date) => date.trim());
@@ -67,98 +65,57 @@ const AdminEmailSettings = () => {
       }
     }
 
-    // Simulate saving data (e.g., sending to the backend)
-    console.log("Form Data Submitted:", formData);
     setFormStatus("Settings saved successfully!");
+    console.log("Form Data Submitted:", formData);
   };
+
   const handleReviewPageClick = () => {
-    navigate("/dashboard/emails/"); // This will navigate to the /review page
+    navigate("/dashboard/emails/");
   };
+
   return (
-    <div className="container mt-5">
-      <h2 className="text-center mb-4">Automatic Email Settings</h2>
-      <div className="card">
-        <div className="card-header bg-primary text-white text-center">
-          <h4>Configure Email and Form Submission Settings</h4>
+    <div className="email-settings">
+      <h3 className="email-settings-title">Automatic Email Settings</h3>
+      <form onSubmit={handleFormSubmit} className="email-settings-form">
+        <div className="form-group">
+          <label>Email Start Date:</label>
+          <input
+            type="date"
+            name="emailStartDate"
+            value={formData.emailStartDate}
+            onChange={handleInputChange}
+          />
         </div>
-        <div className="card-body">
-          <form onSubmit={handleFormSubmit}>
-            {/* Email Start Date */}
-            <div className="mb-3">
-              <label htmlFor="emailStartDate" className="form-label">
-                Email Start Date:
-              </label>
-              <input
-                type="date"
-                id="emailStartDate"
-                name="emailStartDate"
-                className="form-control"
-                value={formData.emailStartDate}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-
-            {/* Email Reminder Dates */}
-            <div className="mb-3">
-              <label htmlFor="emailReminderDates" className="form-label">
-                Email Reminder Dates (comma-separated):
-              </label>
-              <input
-                type="text"
-                id="emailReminderDates"
-                name="emailReminderDates"
-                className="form-control"
-                placeholder="e.g., 2024-12-10, 2024-12-20"
-                value={formData.emailReminderDates}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-
-            {/* Form Closure Date */}
-            <div className="mb-3">
-              <label htmlFor="formClosureDate" className="form-label">
-                Form Closure Date:
-              </label>
-              <input
-                type="date"
-                id="formClosureDate"
-                name="formClosureDate"
-                className="form-control"
-                value={formData.formClosureDate}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-
-            {/* Submit Button */}
-            <button type="submit" className="btn btn-primary w-100">
-              Save Settings
-            </button>
-          </form>
-
-          {/* Status Feedback */}
-          {formStatus && (
-            <div
-              className={`mt-3 alert ${
-                formStatus.includes("success")
-                  ? "alert-success"
-                  : "alert-danger"
-              }`}
-              role="alert"
-            >
-              {formStatus}
-            </div>
-          )}
-          <button
-            onClick={handleReviewPageClick}
-            className="btn btn-secondary w-100 mt-3"
-          >
-            Go to Review Page
-          </button>
+        <div className="form-group">
+          <label>Email Reminder Dates (comma-separated):</label>
+          <input
+            type="text"
+            name="emailReminderDates"
+            placeholder="e.g., 2024-12-10, 2024-12-20"
+            value={formData.emailReminderDates}
+            onChange={handleInputChange}
+          />
         </div>
-      </div>
+        <div className="form-group">
+          <label>Form Closure Date:</label>
+          <input
+            type="date"
+            name="formClosureDate"
+            value={formData.formClosureDate}
+            onChange={handleInputChange}
+          />
+        </div>
+        <button type="submit" className="btn btn-primary">
+          Save Settings
+        </button>
+      </form>
+      {formStatus && <p className="form-status">{formStatus}</p>}
+      <button
+        onClick={handleReviewPageClick}
+        className="btn btn-secondary review-button"
+      >
+        Go to Review Page
+      </button>
     </div>
   );
 };
