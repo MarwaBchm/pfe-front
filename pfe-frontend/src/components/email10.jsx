@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-// import "bootstrap/dist/css/bootstrap.min.css";
+import "./PFEValidation.css"; // Custom CSS file
 
 const PFEVALIDATION = () => {
   const [formData, setFormData] = useState({
@@ -89,18 +89,16 @@ const PFEVALIDATION = () => {
   };
 
   return (
-    <div className="container mt-5">
+    <div className="container">
       <div className="card">
-        <div className="card-header bg-warning text-white text-center">
+        <div className="card-header">
           <h4>Project Proposal Management</h4>
         </div>
         <div className="card-body">
           <form onSubmit={handleFormSubmit}>
             {/* Project Name Input */}
-            <div className="mb-3">
-              <label htmlFor="projectName" className="form-label">
-                Project Name:
-              </label>
+            <div className="form-group">
+              <label htmlFor="projectName">Project Name:</label>
               <input
                 type="text"
                 id="projectName"
@@ -113,10 +111,8 @@ const PFEVALIDATION = () => {
             </div>
 
             {/* Proposer Type Input (Dropdown) */}
-            <div className="mb-3">
-              <label htmlFor="proposerType" className="form-label">
-                Proposer Type:
-              </label>
+            <div className="form-group">
+              <label htmlFor="proposerType">Proposer Type:</label>
               <select
                 id="proposerType"
                 name="proposerType"
@@ -133,10 +129,8 @@ const PFEVALIDATION = () => {
             </div>
 
             {/* Status Dropdown */}
-            <div className="mb-3">
-              <label htmlFor="status" className="form-label">
-                Proposal Status:
-              </label>
+            <div className="form-group">
+              <label htmlFor="status">Proposal Status:</label>
               <select
                 id="status"
                 name="status"
@@ -153,10 +147,8 @@ const PFEVALIDATION = () => {
             </div>
 
             {/* Custom Message Input */}
-            <div className="mb-3">
-              <label htmlFor="customMessage" className="form-label">
-                Custom Message (optional):
-              </label>
+            <div className="form-group">
+              <label htmlFor="customMessage">Custom Message (optional):</label>
               <textarea
                 id="customMessage"
                 name="customMessage"
@@ -168,7 +160,7 @@ const PFEVALIDATION = () => {
             </div>
 
             {/* Submit Button */}
-            <button type="submit" className="btn btn-warning w-100">
+            <button type="submit" className="btn-submit">
               Generate Email Preview
             </button>
           </form>
@@ -176,10 +168,8 @@ const PFEVALIDATION = () => {
           {/* Form Status */}
           {formStatus && (
             <div
-              className={`mt-3 alert ${
-                formStatus.includes("successfully")
-                  ? "alert-success"
-                  : "alert-danger"
+              className={`alert ${
+                formStatus.includes("successfully") ? "alert-success" : "alert-danger"
               }`}
             >
               {formStatus}
@@ -188,11 +178,9 @@ const PFEVALIDATION = () => {
 
           {/* Display Generated Email Preview */}
           {generatedEmail && (
-            <div className="mt-3">
+            <div className="email-preview">
               <h5>Email Preview:</h5>
-              <div className="alert alert-secondary">
-                <pre>{generatedEmail}</pre>
-              </div>
+              <pre>{generatedEmail}</pre>
             </div>
           )}
         </div>

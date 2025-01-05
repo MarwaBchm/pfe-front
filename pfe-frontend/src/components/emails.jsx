@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import AdminEmailSettings from "./Temail1"; // Replace with the correct path for AdminEmailSettings
+import AdminEmailSettings from "./Temail1";
+import PFEVALIDATION from "../components/email10";
 import "./emails.css";
 
 const OutlinedAlerts = () => {
@@ -7,21 +8,56 @@ const OutlinedAlerts = () => {
 
   const alertLinks = [
     { label: "Email Settings", key: "emailSettings" },
-    { label: "Configure PFE Call Email", key: "default" },
-    // Add more alerts as needed
+    { label: "Template Password", link: "http://localhost:5173/email3/" },
+    { label: "Configure PFE Call Email", link: "#" },
+    { label: "PFE Reminder Form", link: "http://localhost:5173/email5/" },
+    {
+      label: "Encadrement Invitation Email",
+      link: "http://localhost:5173/email6/",
+    },
+    {
+      label: "Encadrement Invitation Form",
+      link: "http://localhost:5173/email7/",
+    },
+    {
+      label: "Non-Selection Notification Form",
+      link: "http://localhost:5173/email8/",
+    },
+    { label: "PFE Proposal Form", link: "http://localhost:5173/email9/" },
+    { label: "PFE Validation", key: "pfeValidation" },
+    { label: "PFE Email Notification", link: "http://localhost:5173/email11/" },
+    {
+      label: "Jury Assignment Notification",
+      link: "http://localhost:5173/email12/",
+    },
+    { label: "PFE Event Notification", link: "http://localhost:5173/email13/" },
   ];
 
-  const handleLinkClick = (key) => {
-    setDynamicContent(key);
+  const handleTemplateClick = (template) => {
+    setDynamicContent(template);
   };
+
+  const renderTemplateList = () => (
+    <div className="template-list">
+      {templateList.map((template) => (
+        <div key={template.id} className="template-item">
+          <h5>{template.title}</h5>
+          <p>{template.description}</p>
+          <button className="btn-primary">Select</button>
+        </div>
+      ))}
+    </div>
+  );
 
   const renderEmailForm = () => (
     <div className="form-container">
-      <h3>Email Form</h3>
+      {/* <h3>Email Form</h3> */}
       <form>
         {/* Subject Input */}
         <div className="form-group">
-          <label htmlFor="subject" className="form-label">Subject:</label>
+          <label htmlFor="subject" className="form-label">
+            Subject:
+          </label>
           <input
             type="text"
             id="subject"
@@ -57,7 +93,9 @@ const OutlinedAlerts = () => {
                   value={type}
                   className="checkbox-input"
                 />
-                <label htmlFor={type} className="checkbox-label">{type}</label>
+                <label htmlFor={type} className="checkbox-label">
+                  {type}
+                </label>
               </div>
             ))}
           </div>
@@ -65,7 +103,9 @@ const OutlinedAlerts = () => {
 
         {/* Custom Message Textarea */}
         <div className="form-group">
-          <label htmlFor="customMessage" className="form-label">Message:</label>
+          <label htmlFor="customMessage" className="form-label">
+            Message:
+          </label>
           <textarea
             id="customMessage"
             name="customMessage"
@@ -76,19 +116,12 @@ const OutlinedAlerts = () => {
         </div>
 
         {/* Submit Button */}
-        <button type="submit" className="btn-primary">Submit</button>
+        <button type="submit" className="btn-primary">
+          Submit
+        </button>
       </form>
     </div>
   );
-
-  const renderDynamicContent = () => {
-    switch (dynamicContent) {
-      case "emailSettings":
-        return <AdminEmailSettings />;
-      default:
-        return renderEmailForm();
-    }
-  };
 
   return (
     <div className="container">
@@ -99,7 +132,7 @@ const OutlinedAlerts = () => {
             <div
               key={index}
               className="alert-item"
-              onClick={() => handleLinkClick(alert.key)}
+              onClick={() => handleTemplateClick(alert.key || alert.label)}
             >
               <div className="alert-box">
                 <a href="#" className="alert-link">
@@ -113,7 +146,17 @@ const OutlinedAlerts = () => {
 
       {/* Dynamic Content Section */}
       <div className="form-section">
-        {renderDynamicContent()}
+        {dynamicContent === "Configure PFE Call Email" ? (
+          renderTemplateList()
+        ) : dynamicContent === "form" ? (
+          renderEmailForm()
+        ) : dynamicContent === "emailSettings" ? (
+          <AdminEmailSettings />
+        ) : dynamicContent === "pfeValidation" ? (
+          <PFEVALIDATION />
+        ) : (
+          renderEmailForm()
+        )}
       </div>
     </div>
   );
