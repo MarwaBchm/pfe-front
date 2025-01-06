@@ -10,14 +10,12 @@ import DefenseSchedule from "../components/defenseSchedule";
 import Deadlines from "../components/deadlines";
 import Settings from "../components/settings";
 import ProfilePage from "../components/profile";
-import Register from "../pages/register";
 import WishList from "../components/wishList";
 const AppRoutes = () => {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path="/register" element={<Register />} />
 
         <Route path="/dashboard" element={<Dashboard />}>
           <Route path="home" element={<Home />} />
@@ -29,8 +27,7 @@ const AppRoutes = () => {
           <Route path="settings" element={<Settings />} />
           <Route path="profile" element={<ProfilePage />} />
           <Route path="wishList" element={<WishList />} />
-
-
+          <Route path="optionsManagement" element={<OptionsManagement />} />
         </Route>
       </Routes>
     </Router>

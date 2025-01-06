@@ -8,63 +8,65 @@ const Login = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false); // Loading state for button
   const navigate = useNavigate();
-  const csrfToken = document.head.querySelector(
-    'meta[name="csrf-token"]'
-  )?.content;
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-      setError(""); // Reset error message
-      setLoading(true); // Start loading
 
-      if (!email || !password) {
-        setError("Please enter both email and password.");
-        setLoading(false);
-        return;
-      }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(""); // Reset error message
+    setLoading(true); // Start loading
 
-      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-      if (!emailRegex.test(email)) {
-        setError("Please enter a valid email address.");
-        setLoading(false);
-        return;
-      }
+    // Basic validation
+    if (!email || !password) {
+      setError("Please enter both email and password.");
+      setLoading(false);
+      return;
+    }
 
-      try {
-        // Fetch CSRF cookie first
-        await axios.get("http://127.0.0.1:8000/sanctum/csrf-cookie", {
-          withCredentials: true,
-        });
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(email)) {
+      setError("Please enter a valid email address.");
+      setLoading(false);
+      return;
+    }
 
-        // Send login request
-        const response = await axios.post(
-          "http://127.0.0.1:8000/api/login", // Backend login route
-          { email, password },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              "X-CSRF-TOKEN": csrfToken,
-            },
-            withCredentials: true, // Required for cookies to work
-          }
-        );
+    try {
+      // Fetch CSRF cookie first
+      await axios.get("http://127.0.0.1:8000/sanctum/csrf-cookie", {
+        withCredentials: true,
+      });
 
-        // Check for success and redirect
-        if (response.status === 200) {
-          navigate("/dashboard/home"); // Redirect to dashboard
+      // Send login request
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/login", // Backend login route
+        { email, password },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true, // Required for cookies to work
         }
-      } catch (error) {
-        // Backend error response handling
-        if (error.response && error.response.data) {
-          setError(
-            error.response.data.errors?.email?.[0] || "Invalid login credentials."
-          );
-        } else {
-          setError("An error occurred. Please try again.");
-        }
-      } finally {
-        setLoading(false); // Stop loading after request completes
+      );
+
+      // Check for success and redirect
+      if (response.status === 200) {
+        const { token, user } = response.data; // Assuming the backend returns a token and user data
+
+        // Store the token in local storage (for JWT)
+        localStorage.setItem("authToken", token);
+
+        // Redirect to dashboard
+        navigate("/dashboard/home");
       }
-    };
+    } catch (error) {
+      // Backend error response handling
+      if (error.response && error.response.data) {
+        setError(error.response.data.message || "Invalid login credentials.");
+      } else {
+        setError("An error occurred. Please try again.");
+      }
+    } finally {
+      setLoading(false); // Stop loading after request completes
+    }
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-login-bg bg-center bg-cover">
