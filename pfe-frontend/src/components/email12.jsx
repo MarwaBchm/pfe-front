@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-// import "bootstrap/dist/css/bootstrap.min.css";
+import "./PFEEmailNotification.css";
 
 const PFEEmailNotification = () => {
   const [assignments, setAssignments] = useState([
@@ -130,39 +130,30 @@ const PFEEmailNotification = () => {
   };
 
   return (
-    <div className="container mt-5">
+    <div className="container">
       <div className="card">
-        <div className="card-header bg-warning text-white text-center">
+        <div className="card-header">
           <h4>Notification par Email pour l'Affectation du Jury PFE</h4>
         </div>
         <div className="card-body">
-          <button
-            onClick={handleGenerateEmail}
-            className="btn btn-warning w-100"
-          >
+          <button onClick={handleGenerateEmail} className="btn">
             Générer les emails d'affectation
           </button>
 
           {formStatus && (
-            <div
-              className={`mt-3 alert ${
-                formStatus.includes("succès") ? "alert-success" : "alert-danger"
-              }`}
-            >
+            <div className={`status ${formStatus.includes("succès") ? "success" : "error"}`}>
               {formStatus}
             </div>
           )}
 
           {/* Affichage des emails générés */}
           {generatedEmail.length > 0 && (
-            <div className="mt-3">
+            <div className="emails">
               <h5>Emails générés :</h5>
               {generatedEmail.map((email, index) => (
-                <div key={index} className="alert alert-secondary">
+                <div key={index} className="email-message">
                   <h6>À : {email.recipient}</h6>
-                  <p>
-                    <strong>Objet:</strong> {email.subject}
-                  </p>
+                  <p><strong>Objet:</strong> {email.subject}</p>
                   <pre>{email.emailMessage}</pre>
                 </div>
               ))}

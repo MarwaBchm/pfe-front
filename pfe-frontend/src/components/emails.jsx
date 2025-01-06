@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import AdminEmailSettings from "./Temail1";
 import PFEVALIDATION from "../components/email10";
 import PFEEventNotification from "../components/email13";
+import PFEEmailNotification from "../components/email12";
 
 import "./emails.css";
 
@@ -11,7 +12,61 @@ const OutlinedAlerts = () => {
   const alertLinks = [
     { label: "Email Settings", key: "emailSettings" },
     { label: "Template Password", link: "http://localhost:5173/email3/" },
-    { label: "Configure PFE Call Email", link: "#" },
+    { label: "Configure PFE Call Email", link: "" },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
     { label: "PFE Reminder Form", link: "http://localhost:5173/email5/" },
     {
       label: "Encadrement Invitation Email",
@@ -30,7 +85,7 @@ const OutlinedAlerts = () => {
     { label: "PFE Email Notification", link: "http://localhost:5173/email11/" },
     {
       label: "Jury Assignment Notification",
-      link: "http://localhost:5173/email12/",
+      key: "pfeemailnotification",
     },
 
     { label: "PFE Event Notification", key: "pefeventnotification" },
@@ -157,6 +212,8 @@ const OutlinedAlerts = () => {
           <AdminEmailSettings />
         ) : dynamicContent === "pfeValidation" ? (
           <PFEVALIDATION />
+        ) : dynamicContent === "pfeemailnotification" ? (
+          <PFEEmailNotification />
         ) : dynamicContent === "pefeventnotification" ? (
           <PFEEventNotification />
         ) : (
