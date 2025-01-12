@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 
 import Login from "../pages/login";
 import Dashboard from "../layouts/dashboardLayout";
@@ -11,26 +11,23 @@ import Deadlines from "../components/deadlines";
 import Settings from "../components/settings";
 import ProfilePage from "../components/profile";
 import WishList from "../components/wishList";
+
 const AppRoutes = () => {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Login />} />
-
-        <Route path="/dashboard" element={<Dashboard />}>
-          <Route path="home" element={<Home />} />
-          <Route path="usersManagement" element={<UsersManagement />} />
-          <Route path="subjectsManagement" element={<SubjectsManagement />} />
-          <Route path="emails" element={<Emails />} />
-          <Route path="defenseSchedule" element={<DefenseSchedule />} />
-          <Route path="deadlines" element={<Deadlines />} />
-          <Route path="settings" element={<Settings />} />
-          <Route path="profile" element={<ProfilePage />} />
-          <Route path="wishList" element={<WishList />} />
-          <Route path="optionsManagement" element={<OptionsManagement />} />
-        </Route>
-      </Routes>
-    </Router>
+    <Routes>
+      <Route path="/" element={<Login />} />
+      <Route path="/dashboard" element={<Dashboard />}>
+        <Route path="home" element={<Home />} />
+        <Route path="usersManagement" element={<UsersManagement />} />
+        <Route path="subjectsManagement" element={<SubjectsManagement />} />
+        <Route path="emails" element={<Emails />} />
+        <Route path="defenseSchedule" element={<DefenseSchedule />} />
+        <Route path="deadlines" element={<Deadlines />} />
+        <Route path="settings" element={<Settings />} />
+        <Route path="profile" element={<ProfilePage />} />
+        <Route path="wishList" element={<WishList />} />
+      </Route>
+    </Routes>
   );
 };
 

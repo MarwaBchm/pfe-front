@@ -1,8 +1,8 @@
 // Emails.jsx
 import React from "react";
-
+import  CookieContent from "./ui/local";
 const Emails = () => {
-  return <h1>Welcome to the Emails Page</h1>;
+  return <CookieContent/>;
 };
 
 export default Emails;
