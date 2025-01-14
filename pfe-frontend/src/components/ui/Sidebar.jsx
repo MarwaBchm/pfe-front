@@ -1,7 +1,9 @@
 import React, { useState, useLayoutEffect, useRef } from "react";
-import { Link, useLocation } from "react-router-dom"; // Import useLocation for current route tracking
+import { Link, useLocation } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
+
 const sidebarItems = [
   {
     id: 1,
@@ -59,7 +61,6 @@ const sidebarItems = [
     selectedImage: "/icons/selected/settings.png",
     path: "/dashboard/settings",
   },
-
   {
     id: 9,
     label: "Sign Out",
@@ -69,18 +70,17 @@ const sidebarItems = [
 ];
 
 const Sidebar = () => {
-  const navigate = useNavigate(); // For redirecting after logout
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(true);
   const [activeItem, setActiveItem] = useState(1);
+  const [signingOut, setSigningOut] = useState(false); // Track signing out state
   const indicatorRef = useRef(null);
-  const location = useLocation(); // Use location to get current route
+  const location = useLocation();
 
-  // Toggle sidebar visibility
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
 
-  // Automatically open the sidebar on large screens
   useLayoutEffect(() => {
     const handleResize = () => {
       if (window.matchMedia("(min-width: 1024px)").matches) {
@@ -93,16 +93,14 @@ const Sidebar = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Update active item based on the current route
   useLayoutEffect(() => {
     const currentPath = location.pathname;
     const activeItem = sidebarItems.find((item) => item.path === currentPath);
     if (activeItem) {
       setActiveItem(activeItem.id);
     }
-  }, [location.pathname]); // Re-run when the pathname changes
+  }, [location.pathname]);
 
-  // Update the position of the indicator
   useLayoutEffect(() => {
     const updateIndicatorPosition = () => {
       const activeLink = document.querySelector(`.sidebar-item-${activeItem}`);
@@ -112,7 +110,6 @@ const Sidebar = () => {
         const sidebarTop = sidebarContainer.offsetTop;
         const { offsetTop, offsetHeight } = activeLink;
 
-        // Calculate the top position and height for the indicator
         const topPosition = offsetTop - sidebarTop + (isOpen ? 0 : 5);
         const indicatorHeight = offsetHeight;
 
@@ -122,60 +119,64 @@ const Sidebar = () => {
     };
 
     updateIndicatorPosition();
-
-    // Re-calculate the position on resize
     window.addEventListener("resize", updateIndicatorPosition);
     return () => window.removeEventListener("resize", updateIndicatorPosition);
   }, [activeItem, isOpen]);
+
   const handleLogout = async () => {
     try {
-      const token = localStorage.getItem("token"); // Retrieve the token from localStorage
+      // Set signingOut to true immediately to update the UI
+      setSigningOut(true);
 
-      if (!token) {
-        alert("No token found. Please log in.");
-        return;
+      // Get the authToken from cookies
+      const authToken = Cookies.get("authToken");
+
+      if (!authToken) {
+        throw new Error("No auth token found");
       }
 
+      // Send logout request with the authToken in the Authorization header
       await axios.post(
         "http://127.0.0.1:8000/api/logout",
         {},
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Send the token in the header
+            Authorization: `Bearer ${authToken}`, // Send the token in the Authorization header
           },
-          withCredentials: true,
         }
       );
 
-      localStorage.removeItem("token"); // Clear the token from localStorage
-      navigate("/"); // Redirect to login page
+      // Remove the authToken and user cookies after the logout request is successful
+      Cookies.remove("authToken", { path: "/" });
+      Cookies.remove("user", { path: "/" });
+
+      // Redirect to login page after successful logout
+      navigate("/");
     } catch (error) {
       console.error("Logout failed:", error.response?.data || error.message);
-      alert("Logout failed. Please try again.");
+      alert(error.response?.data.message || "Logout failed. Please try again.");
+    } finally {
+      // Reset signingOut state after the process is complete
+      setSigningOut(false);
     }
   };
 
   return (
     <div className="flex h-full">
-      {/* Sidebar */}
       <div
         className={`sidebar-container bg-white pt-2 shadow-lg h-full transition-all duration-500 overflow-y-auto ${
           isOpen ? "w-48 sm:w-48 lg:w-60" : "w-16"
         }`}
       >
-        {/* Sidebar Content */}
         <div className="py-2 relative">
-          {/* Animated Indicator */}
           <div
             ref={indicatorRef}
             className="absolute right-0 w-1 bg-blue-4 rounded-md transition-all duration-500"
           ></div>
 
-          {/* Logo */}
           <div
             className={`text-2xl font-NovaFlat flex flex-row items-center gap-2 lg:pl-4 pb-4 border-b border-gray-300 border-opacity-30`}
           >
-            {/* Hamburger Button */}
             <button
               className="lg:hidden mb-4 p-2 text-black rounded-md focus:outline-none"
               onClick={toggleSidebar}
@@ -186,7 +187,6 @@ const Sidebar = () => {
                   className="h-5"
                 />
               )}
-
               {isOpen && (
                 <img src="/icons/selected/menu-opened.png" className="h-5" />
               )}
@@ -197,23 +197,14 @@ const Sidebar = () => {
             </h1>
           </div>
 
-          {/* Navigation */}
           <nav className="space-y-2 mt-4">
             {sidebarItems.map((item) =>
               item.label === "Sign Out" ? (
-                <Link
+                <div
                   key={item.id}
-                  to={item.path}
                   onClick={handleLogout}
-                  className={`sidebar-item-${
-                    item.id
-                  } relative flex flex-row items-center py-2 px-3 mx-2 cursor-pointer rounded ${
-                    item.isAction
-                      ? "text-white hover:bg-red-700"
-                      : "hover:bg-blue-50"
-                  }`}
+                  className={`sidebar-item-${item.id} relative flex flex-row items-center py-2 px-3 mx-2 cursor-pointer rounded hover:bg-blue-300`}
                 >
-                  {/* Icon */}
                   <img
                     src={
                       activeItem === item.id ? item.selectedImage : item.image
@@ -221,7 +212,6 @@ const Sidebar = () => {
                     alt={item.label}
                     className="w-6 h-6 mr-3"
                   />
-                  {/* Label */}
                   <span
                     className={`${isOpen ? "block" : "hidden"} text-sm ${
                       activeItem === item.id
@@ -229,23 +219,17 @@ const Sidebar = () => {
                         : "text-gray-1 font-normal"
                     }`}
                   >
-                    {item.label}
+                    {signingOut ? "Signing out..." : item.label}{" "}
+                    {/* Update label */}
                   </span>
-                </Link>
+                </div>
               ) : (
                 <Link
                   key={item.id}
                   to={item.path}
                   onClick={() => setActiveItem(item.id)}
-                  className={`sidebar-item-${
-                    item.id
-                  } relative flex flex-row items-center py-2 px-3 mx-2 cursor-pointer rounded ${
-                    item.isAction
-                      ? "text-white hover:bg-red-700"
-                      : "hover:bg-blue-50"
-                  }`}
+                  className={`sidebar-item-${item.id} relative flex flex-row items-center py-2 px-3 mx-2 cursor-pointer rounded hover:bg-blue-50`}
                 >
-                  {/* Icon */}
                   <img
                     src={
                       activeItem === item.id ? item.selectedImage : item.image
@@ -253,7 +237,6 @@ const Sidebar = () => {
                     alt={item.label}
                     className="w-6 h-6 mr-3"
                   />
-                  {/* Label */}
                   <span
                     className={`${isOpen ? "block" : "hidden"} text-sm ${
                       activeItem === item.id
