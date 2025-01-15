@@ -29,6 +29,7 @@ const CookieContent = () => {
                 JSON.stringify(parsedUser, null, 2)
               : "No user info in cookies"}
           </pre>
+          
         </div>
       </div>
     </div>

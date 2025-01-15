@@ -9,24 +9,51 @@ import Emails from "../components/emails";
 import DefenseSchedule from "../components/defenseSchedule";
 import Deadlines from "../components/deadlines";
 import Settings from "../components/settings";
-import ProfilePage from "../components/profile";
 import WishList from "../components/wishList";
-import Unauthorized from   "../pages/unauthorized";
+import Unauthorized from "../pages/unauthorized";
+import AuthenticatedRoute from "./authenticatedUserRoute";
+import RoleBasedRoute from "./roleBasedRoute";
+import Cookies from "js-cookie";
+
 const AppRoutes = () => {
+  const authToken = Cookies.get("authToken"); // Check for the token
+  const isAuthenticated = !!authToken; // Boolean value for authentication
+  const user = Cookies.get("user");
+  const parsedUser = user ? JSON.parse(user) : null;
+  const userRole = parsedUser?.role || "No role found";
+
   return (
     <Routes>
       <Route path="/" element={<Login />} />
       <Route path="/error" element={<Unauthorized />} />
 
-      <Route path="/dashboard" element={<Dashboard />}>
+      <Route
+        path="/dashboard"
+        element={
+          <AuthenticatedRoute isAuthenticated={isAuthenticated}>
+            <Dashboard />
+          </AuthenticatedRoute>
+        }
+      >
         <Route path="home" element={<Home />} />
-        <Route path="usersManagement" element={<UsersManagement />} />
+
+        <Route
+          element={
+            <RoleBasedRoute
+              rolesAllowed={["admin"]}
+              userRole={userRole}
+              isAuthenticated={isAuthenticated}
+            />
+          }
+        >  
+          <Route path="usersManagement" element={<UsersManagement />} />
+          <Route path="emails" element={<Emails />} />
+          <Route path="deadlines" element={<Deadlines />} />
+        </Route>
+
         <Route path="subjectsManagement" element={<SubjectsManagement />} />
-        <Route path="emails" element={<Emails />} />
         <Route path="defenseSchedule" element={<DefenseSchedule />} />
-        <Route path="deadlines" element={<Deadlines />} />
         <Route path="settings" element={<Settings />} />
-        <Route path="profile" element={<ProfilePage />} />
         <Route path="wishList" element={<WishList />} />
       </Route>
     </Routes>
