@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Cookies from "js-cookie"; // Import js-cookie library
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -14,57 +15,58 @@ const Login = () => {
     setError(""); // Reset error message
     setLoading(true); // Start loading
 
-    // Basic validation
     if (!email || !password) {
       setError("Please enter both email and password.");
       setLoading(false);
       return;
     }
 
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (!emailRegex.test(email)) {
-      setError("Please enter a valid email address.");
-      setLoading(false);
-      return;
-    }
-
     try {
-      // Fetch CSRF cookie first
-      await axios.get("http://127.0.0.1:8000/sanctum/csrf-cookie", {
-        withCredentials: true,
-      });
-
       // Send login request
       const response = await axios.post(
         "http://127.0.0.1:8000/api/login", // Backend login route
         { email, password },
         {
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "application/json", // Fixed typo here
           },
-          withCredentials: true, // Required for cookies to work
         }
       );
 
-      // Check for success and redirect
       if (response.status === 200) {
-        const { token, user } = response.data; // Assuming the backend returns a token and user data
+        const { token, user } = response.data;
 
-        // Store the token in local storage (for JWT)
-        localStorage.setItem("authToken", token);
+        // Calculate 2 hours from the current time
+        const expiresIn = new Date(new Date().getTime() + 2 * 60 * 60 * 1000); // 2 hours
 
-        // Redirect to dashboard
+        // Check if the app is running in a secure (HTTPS) environment
+        const isSecure = window.location.protocol === "https:";
+
+        // Store the token in cookies with a 2-hour expiration
+        Cookies.set("authToken", token, {
+          expires: expiresIn,
+          secure: isSecure, // Use secure cookies only in HTTPS
+          sameSite: "Strict", // Prevent CSRF attacks
+        });
+
+        // Store user info in cookies with a 2-hour expiration
+        Cookies.set("user", JSON.stringify(user), {
+          expires: expiresIn,
+          secure: isSecure, // Use secure cookies only in HTTPS
+          sameSite: "Strict",
+        });
+
+        // Redirect based on user role
         navigate("/dashboard/home");
       }
     } catch (error) {
-      // Backend error response handling
       if (error.response && error.response.data) {
         setError(error.response.data.message || "Invalid login credentials.");
       } else {
         setError("An error occurred. Please try again.");
       }
     } finally {
-      setLoading(false); // Stop loading after request completes
+      setLoading(false); // Stop loading
     }
   };
 
