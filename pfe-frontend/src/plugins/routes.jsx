@@ -11,11 +11,13 @@ import Deadlines from "../components/deadlines";
 import Settings from "../components/settings";
 import ProfilePage from "../components/profile";
 import WishList from "../components/wishList";
-
+import Unauthorized from   "../pages/unauthorized";
 const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Login />} />
+      <Route path="/error" element={<Unauthorized />} />
+
       <Route path="/dashboard" element={<Dashboard />}>
         <Route path="home" element={<Home />} />
         <Route path="usersManagement" element={<UsersManagement />} />
