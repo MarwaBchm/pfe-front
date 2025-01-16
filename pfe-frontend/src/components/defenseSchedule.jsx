@@ -5,7 +5,7 @@ import "react-calendar/dist/Calendar.css";
 import "./defenseSchedule.css";
 
 const App = () => {
-  const userRole = "admin"; // Change to "admin", "prof", "profresponsable", "entreprise", or "student"
+  const userRole = "prof"; // Change to "admin", "prof", "profresponsable", "entreprise", or "student"
 
   return (
     <div className="app-container">

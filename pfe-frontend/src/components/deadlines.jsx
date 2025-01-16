@@ -3,7 +3,7 @@ import "./deadlines.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
 const Deadlines = () => {
-  const [role, setRole] = useState("admin"); // Current user role
+  const [role, setRole] = useState("prof"); // Current user role
   const [formData, setFormData] = useState({
     theme: "",
     description: "",
