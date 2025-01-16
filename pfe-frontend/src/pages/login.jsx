@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Cookies from "js-cookie"; // Import js-cookie library
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -8,63 +9,66 @@ const Login = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false); // Loading state for button
   const navigate = useNavigate();
-  const csrfToken = document.head.querySelector(
-    'meta[name="csrf-token"]'
-  )?.content;
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-      setError(""); // Reset error message
-      setLoading(true); // Start loading
 
-      if (!email || !password) {
-        setError("Please enter both email and password.");
-        setLoading(false);
-        return;
-      }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(""); // Reset error message
+    setLoading(true); // Start loading
 
-      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-      if (!emailRegex.test(email)) {
-        setError("Please enter a valid email address.");
-        setLoading(false);
-        return;
-      }
+    if (!email || !password) {
+      setError("Please enter both email and password.");
+      setLoading(false);
+      return;
+    }
 
-      try {
-        // Fetch CSRF cookie first
-        await axios.get("http://127.0.0.1:8000/sanctum/csrf-cookie", {
-          withCredentials: true,
+    try {
+      // Send login request
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/login", // Backend login route
+        { email, password },
+        {
+          headers: {
+            "Content-Type": "application/json", // Fixed typo here
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        const { token, user } = response.data;
+
+        // Calculate 2 hours from the current time
+        const expiresIn = new Date(new Date().getTime() + 2 * 60 * 60 * 1000); // 2 hours
+
+        // Check if the app is running in a secure (HTTPS) environment
+        const isSecure = window.location.protocol === "https:";
+
+        // Store the token in cookies with a 2-hour expiration
+        Cookies.set("authToken", token, {
+          expires: expiresIn,
+          secure: isSecure, // Use secure cookies only in HTTPS
+          sameSite: "Strict", // Prevent CSRF attacks
         });
 
-        // Send login request
-        const response = await axios.post(
-          "http://127.0.0.1:8000/api/login", // Backend login route
-          { email, password },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              "X-CSRF-TOKEN": csrfToken,
-            },
-            withCredentials: true, // Required for cookies to work
-          }
-        );
+        // Store user info in cookies with a 2-hour expiration
+        Cookies.set("user", JSON.stringify(user), {
+          expires: expiresIn,
+          secure: isSecure, // Use secure cookies only in HTTPS
+          sameSite: "Strict",
+        });
 
-        // Check for success and redirect
-        if (response.status === 200) {
-          navigate("/dashboard/home"); // Redirect to dashboard
-        }
-      } catch (error) {
-        // Backend error response handling
-        if (error.response && error.response.data) {
-          setError(
-            error.response.data.errors?.email?.[0] || "Invalid login credentials."
-          );
-        } else {
-          setError("An error occurred. Please try again.");
-        }
-      } finally {
-        setLoading(false); // Stop loading after request completes
+        // Redirect based on user role
+        navigate("/dashboard/home");
       }
-    };
+    } catch (error) {
+      if (error.response && error.response.data) {
+        setError(error.response.data.message || "Invalid login credentials.");
+      } else {
+        setError("An error occurred. Please try again.");
+      }
+    } finally {
+      setLoading(false); // Stop loading
+    }
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-login-bg bg-center bg-cover">
