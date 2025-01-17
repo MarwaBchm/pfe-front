@@ -74,7 +74,6 @@ const AppRoutes = () => {
           </Route>
           <Route path="deadlines" element={<Deadlines />} />
           <Route path="settings" element={<Settings />} />
-          <Route path="profile" element={<ProfilePage />} />
           <Route path="wishList" element={<WishList />} />
         </Route>
 

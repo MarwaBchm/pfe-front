@@ -44,6 +44,7 @@ const OutlinedAlerts = () => {
 
   const renderTemplateList = () => (
     <div className="template-list">
+      
       {templateList.map((template) => (
         <div key={template.id} className="template-item">
           <h5>{template.title}</h5>
