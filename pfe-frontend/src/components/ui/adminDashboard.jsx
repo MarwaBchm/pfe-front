@@ -202,7 +202,7 @@ function AdminDashboard() {
         </div>
 
         {/* Additional Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className=" grid grid-cols-1 md:grid-cols-3 gap-6">
           <StatCard
             title="Students Picked Topics"
             value={stats.students.picked}

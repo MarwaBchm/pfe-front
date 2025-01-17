@@ -49,6 +49,9 @@ const AppRoutes = () => {
           <Route path="usersManagement" element={<UsersManagement />} />
           <Route path="emails" element={<Emails />} />
           <Route path="deadlines" element={<Deadlines />} />
+          <Route path="settings" element={<Settings />} />
+          <Route path="profile" element={<ProfilePage />} />
+          <Route path="wishList" element={<WishList />} />
         </Route>
 
         <Route path="subjectsManagement" element={<SubjectsManagement />} />
