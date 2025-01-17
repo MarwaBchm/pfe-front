@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import CurrentPathDisplay from "./currentPathDisplay";
+import CurrentPathDisplay from "../../plugins/currentPathDisplay";
 import NotificationPage from "./notification";
 
 const Navbar = () => {

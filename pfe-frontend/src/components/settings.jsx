@@ -1,7 +1,7 @@
 import React from "react";
-import StudentSettings from "./ui/StudentSettings";
-import ProfessorSettings from "./ui/ProfessorSettings";
-import CompanySettings from "./ui/CompanySettings";
+import StudentSettings from './ui/studentUI/StudentSettings'
+import ProfessorSettings from "./ui/professorUI/ProfessorSettings";
+import CompanySettings from "./ui/companyUI/CompanySettings";
 
 const Settings = () => {
   // Change the role to 'student', 'professor', or 'company' here

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import ProfNotification from "./ProfNotification";
-import StudentNotification from "./StudentNotification";
-import ProfResponsableNotification from "./ProfResponsableNotification";
-import EntrepriseNotification from "./EntrepriseNotification";
-import AdminNotification from "./AdminNotification";
+import ProfNotification from "./professorUI/ProfNotification";
+import StudentNotification from "./studentUI/StudentNotification";
+import ProfResponsableNotification from "./responsibleUI/ProfResponsableNotification";
+import EntrepriseNotification from "./companyUI/EntrepriseNotification";
+import AdminNotification from "./adminUI/AdminNotification";
 
 const NotificationPage = ({ isAdmin = false }) => {
   const users = {

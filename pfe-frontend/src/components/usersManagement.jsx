@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import StudentList from "./ui/studentsList";
-import ProfessorList from "./ui/professorsList";
-import CompanyList from "./ui/companiesList";
-import AddStudent from "./ui/addStudent";
-import AddProfessor from "./ui/addProfessor";
-import AddCompany from "./ui/addCompany";
+import StudentList from "./ui/adminUI/studentsList";
+import ProfessorList from "./ui/adminUI/professorsList";
+import CompanyList from "./ui/adminUI/companiesList";
+import AddStudent from "./ui/adminUI/addStudent";
+import AddProfessor from "./ui/adminUI/addProfessor";
+import AddCompany from "./ui/adminUI/addCompany";
 
 function StatCard({ title, value, icon, onClick, isActive }) {
   return (

@@ -1,6 +1,6 @@
 
 import { useLocation } from 'react-router-dom';
-import routeMap from '../../plugins/routesMap';
+import routeMap from './routesMap';
 
 const CurrentPathDisplay = () => {
   const location = useLocation();

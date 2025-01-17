@@ -1,6 +1,6 @@
 import React from "react";
-import ProfessorWishList from "./ui/ProfessorWishList";
-import StudentWishList from "./ui/StudentWishList";
+import ProfessorWishList from "./ui/professorUI/ProfessorWishList";
+import StudentWishList from "./ui/studentUI/StudentWishList";
 
 const WishList = () => {
   // Define the role (Change 'professor' to 'student' to test)
