@@ -73,6 +73,9 @@ const AppRoutes = () => {
             <Route path="email13" element={<PFEEventNotification />} />
           </Route>
           <Route path="deadlines" element={<Deadlines />} />
+          <Route path="settings" element={<Settings />} />
+          <Route path="profile" element={<ProfilePage />} />
+          <Route path="wishList" element={<WishList />} />
         </Route>
 
         <Route path="subjectsManagement" element={<SubjectsManagement />} />
