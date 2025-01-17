@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./AdminNotification.css";
+import "../../../styles/AdminNotification.css";
 
 const AdminNotification = () => {
   const [gmail, setGmail] = useState("");

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { FaCalendarAlt, FaAlignLeft, FaClock, FaEnvelope, FaUser } from "react-icons/fa";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-import "./defenseSchedule.css";
+import "../styles/defenseSchedule.css";
 
 const App = () => {
   const userRole = "prof"; // Change to "admin", "prof", "profresponsable", "entreprise", or "student"

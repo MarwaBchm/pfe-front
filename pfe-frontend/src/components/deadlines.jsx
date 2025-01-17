@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./deadlines.css";
+import "../styles/deadlines.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
 const Deadlines = () => {
