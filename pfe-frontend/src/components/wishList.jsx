@@ -6,7 +6,7 @@ import ResponsibleWishList from "./ui/responsibleUI/ResponsibleWishList";
 
 const WishList = () => {
   // Define the role (Change 'professor' to 'student' or 'admin' or 'responsible' to test)
-  const role = "responsible"; // Change to 'student' to display StudentWishList
+  const role = "admin"; // Change to 'student' to display StudentWishList
 
   return (
     <div className=" flex justify-start items-start  w-full mx-2 my-3 rounded-md">

@@ -72,11 +72,11 @@ const AppRoutes = () => {
             <Route path="email12" element={<PFEEmailNotification2 />} />
             <Route path="email13" element={<PFEEventNotification />} />
           </Route>
-          <Route path="deadlines" element={<Deadlines />} />
+         
+        </Route>
+ <Route path="deadlines" element={<Deadlines />} />
           <Route path="settings" element={<Settings />} />
           <Route path="wishList" element={<WishList />} />
-        </Route>
-
         <Route path="subjectsManagement" element={<SubjectsManagement />} />
         <Route path="defenseSchedule" element={<DefenseSchedule />} />
         <Route path="settings" element={<Settings />} />
