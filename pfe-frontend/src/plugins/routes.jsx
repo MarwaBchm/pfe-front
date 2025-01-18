@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import AuthenticatedRoute from "./authenticatedUserRoute";
 import RoleBasedRoute from "./roleBasedRoute";
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
 
 import Login from "../pages/login";
 import Dashboard from "../layouts/dashboardLayout";
@@ -27,6 +27,7 @@ import PFEEmailNotification from "../components/ui/adminUI/email11";
 import PFEEmailNotification2 from "../components/ui/adminUI/email12";
 import PFEEventNotification from "../components/ui/adminUI/email13";
 
+import OptionsManagement from "../components/optionsManagement";
 const AppRoutes = () => {
   const token = Cookies.get("authToken");
   const isAuthenticated = token ? true : false;
@@ -55,7 +56,7 @@ const AppRoutes = () => {
         <Route path="wishList" element={<WishList />} />
         <Route path="subjectsManagement" element={<SubjectsManagement />} />
         <Route path="defenseSchedule" element={<DefenseSchedule />} />
-
+        <Route path="optionsManagement" element={<OptionsManagement />} />
         {/* Admin-Only Emails Section */}
         <Route
           path="emails"

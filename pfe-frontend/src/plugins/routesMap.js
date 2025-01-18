@@ -8,6 +8,7 @@ const routeMap = {
   "/dashboard/settings": "Settings",
   "/dashboard/profile": "Profile",
   "/dashboard/wishList": "Wish List",
+  "/dashboard/optionsManagement": "Options Management",
 };
 
 export default routeMap;
