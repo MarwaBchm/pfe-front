@@ -1,7 +1,4 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import AuthenticatedRoute from "./authenticatedUserRoute";
-import RoleBasedRoute from "./roleBasedRoute";
-import Cookies from "js-cookie";
 
 import Login from "../pages/login";
 import Dashboard from "../layouts/dashboardLayout";
@@ -26,29 +23,14 @@ import PFEVALIDATION from "../components/ui/adminUI/email10";
 import PFEEmailNotification from "../components/ui/adminUI/email11";
 import PFEEmailNotification2 from "../components/ui/adminUI/email12";
 import PFEEventNotification from "../components/ui/adminUI/email13";
-
 import OptionsManagement from "../components/optionsManagement";
-const AppRoutes = () => {
-  const token = Cookies.get("authToken");
-  const isAuthenticated = token ? true : false;
 
-  const user = Cookies.get("user");
-  const parsedUser = user ? JSON.parse(user) : null;
-  const userRole = parsedUser?.role || "No role found";
+const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Login />} />
       <Route path="/error" element={<Unauthorized />} />
-
-      {/* Protected Dashboard Route */}
-      <Route
-        path="/dashboard"
-        element={
-          <AuthenticatedRoute isAuthenticated={isAuthenticated}>
-            <Dashboard />
-          </AuthenticatedRoute>
-        }
-      >
+      <Route path="/dashboard" element={<Dashboard />}>
         <Route path="home" element={<Home />} />
         <Route path="usersManagement" element={<UsersManagement />} />
         <Route path="deadlines" element={<Deadlines />} />
@@ -57,19 +39,7 @@ const AppRoutes = () => {
         <Route path="subjectsManagement" element={<SubjectsManagement />} />
         <Route path="defenseSchedule" element={<DefenseSchedule />} />
         <Route path="optionsManagement" element={<OptionsManagement />} />
-        {/* Admin-Only Emails Section */}
-        <Route
-          path="emails"
-          element={
-            <RoleBasedRoute
-              isAuthenticated={isAuthenticated}
-              userRole={userRole}
-              rolesAllowed={["admin"]}
-            >
-              <Emails />
-            </RoleBasedRoute>
-          }
-        >
+        <Route path="emails" element={<Emails />}>
           <Route path="email1" element={<AdminEmailSettings />} />
           <Route path="email2" element={<PFEEmailForm />} />
           <Route path="email3" element={<AddUserForm />} />
@@ -84,11 +54,9 @@ const AppRoutes = () => {
           <Route path="email13" element={<PFEEventNotification />} />
         </Route>
       </Route>
-
-      {/* Fallback Route */}
       <Route path="*" element={<Unauthorized />} />
     </Routes>
   );
 };
 
-export default AppRoutes;
+export default AppRoutes;

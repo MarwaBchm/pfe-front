@@ -82,127 +82,155 @@ const RefusalPopup = ({ onClose, onSubmit }) => {
   );
 };
 
+// Binôme Validation Popup
+const BinomeValidationPopup = ({ validation, onClose, onConfirm }) => {
+  if (!validation) return null;
+
+  return (
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div className="bg-white rounded-lg shadow-lg p-6 w-4/5 max-w-md">
+        <h3 className="text-lg font-bold mb-4">Validation de Binôme</h3>
+        <p>
+          <strong>{validation.from}</strong> vous a invité à travailler sur un PFE. Acceptez-vous ?
+        </p>
+        <div className="flex justify-end space-x-4 mt-4">
+          <button
+            onClick={onClose}
+            className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600"
+          >
+            Refuser
+          </button>
+          <button
+            onClick={() => onConfirm(validation.pfeId)}
+            className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
+          >
+            Accepter
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // Main Component
 const SubjectsManagement = () => {
-  const [userRole, setUserRole] = useState("ProfResponsable"); // Change role : ProfResponsable - Student - Company - Professor
+  const [userRole, setUserRole] = useState("ProfResponsable"); // Change role: ProfResponsable - Student - Company - Professor
   const [popupContent, setPopupContent] = useState(null);
   const [refusalPopup, setRefusalPopup] = useState(null);
+  const [binomeValidation, setBinomeValidation] = useState(null);
 
-  const [topics, setTopics] = useState([
-    {
-      id: "prof1",
-      title: "AI for Recruitment",
-      description: "Optimize recruitment processes with AI.",
-      status: "Pending",
-      origin: "Professor",
-      submittedBy: "Dr. Smith",
-      tools: "Python, TensorFlow",
-      requirements: ["Dataset of job applications", "Cloud storage"],
-    },
-    {
-      id: "comp1",
-      title: "Smart Stock Management",
-      description: "Real-time inventory optimization.",
-      status: "Pending",
-      origin: "Company",
-      submittedBy: "Amazon",
-    },
-    {
-      id: "stud1",
-      title: "AI Study Assistant",
-      description: "AI-powered assistant for students.",
-      status: "Pending",
-      origin: "Student",
-      submittedBy: "John Doe",
-      teamMate: "Jane Smith",
-    },
-  ]);
+  // Existing topics state
+  const [topics, setTopics] = useState([]);
 
-  const studentsDatabase = [
-    "John Doe",
-    "Jane Smith",
-    "Alice Johnson",
-    "Bob Martin",
-    "Charlie Brown",
-    "Lucy Van Pelt",
-    "David Lee",
-    "Emily Davis",
-    "Eve Clark",
-    "Frank Wright",
-  ];
-
-  const [newTopic, setNewTopic] = useState({
-    title: "",
-    description: "",
-    teamMate: "",
-    tools: "",
-    requirements: "",
+  // Enseignant form state
+  const [enseignantForm, setEnseignantForm] = useState({
+    encadrant: "",
+    coEncadrant: "",
+    option: "",
+    typeSujet: "",
+    intitule: "",
+    resume: "",
+    technologies: "",
+    besoinsMateriel: "",
   });
 
-  const [suggestedStudents, setSuggestedStudents] = useState([]);
+  // Étudiant form state
+  const [etudiantForm, setEtudiantForm] = useState({
+    etudiant1: "",
+    etudiant2: "",
+    option: "",
+    intitule: "",
+    resume: "",
+    technologies: "",
+    besoinsMateriel: "",
+  });
 
-  const handleShowPopup = (topic) => setPopupContent(topic);
-  const handleClosePopup = () => setPopupContent(null);
+  // Entreprise form state
+  const [entrepriseForm, setEntrepriseForm] = useState({
+    entreprise: "",
+    option: "",
+    intitule: "",
+    resume: "",
+    technologies: "",
+  });
 
-  const handleRefusalSubmit = (reason) => {
-    setTopics((prevTopics) =>
-      prevTopics.map((topic) =>
-        topic.id === refusalPopup.id ? { ...topic, status: "Refused", reason } : topic
-      )
-    );
-    setRefusalPopup(null);
+
+  // Handle Enseignant form submission
+  const handleEnseignantSubmit = (e) => {
+    e.preventDefault();
+    const newPFE = {
+      id: `enseignant${Date.now()}`,
+      ...enseignantForm,
+      status: "Pending",
+      origin: "Professor",
+      submittedBy: "Enseignant",
+    };
+    setTopics((prevTopics) => [...prevTopics, newPFE]);
+    setEnseignantForm({
+      encadrant: "",
+      coEncadrant: "",
+      option: "",
+      typeSujet: "",
+      intitule: "",
+      resume: "",
+      technologies: "",
+      besoinsMateriel: "",
+    });
   };
 
-  const handleTopicAction = (topicId, action) => {
-    if (action === "Refused") {
-      setRefusalPopup(topics.find((topic) => topic.id === topicId));
-    } else {
-      setTopics((prevTopics) =>
-        prevTopics.map((topic) =>
-          topic.id === topicId ? { ...topic, status: action } : topic
-        )
-      );
+  // Handle Étudiant form submission
+  const handleEtudiantSubmit = (e) => {
+    e.preventDefault();
+    const newPFE = {
+      id: `etudiant${Date.now()}`,
+      ...etudiantForm,
+      status: "Pending",
+      origin: "Student",
+      submittedBy: etudiantForm.etudiant1,
+      teamMate: etudiantForm.etudiant2,
+    };
+    setTopics((prevTopics) => [...prevTopics, newPFE]);
+    setEtudiantForm({
+      etudiant1: "",
+      etudiant2: "",
+      option: "",
+      intitule: "",
+      resume: "",
+      technologies: "",
+      besoinsMateriel: "",
+    });
+
+    // Send notification to binôme
+    if (etudiantForm.etudiant2) {
+      setBinomeValidation({
+        from: etudiantForm.etudiant1,
+        to: etudiantForm.etudiant2,
+        pfeId: newPFE.id,
+      });
     }
   };
 
-  const handleStudentInput = (value) => {
-    setNewTopic({ ...newTopic, teamMate: value });
-    if (value.trim()) {
-      const suggestions = studentsDatabase.filter((name) =>
-        name.toLowerCase().includes(value.toLowerCase())
-      );
-      setSuggestedStudents(suggestions);
-    } else {
-      setSuggestedStudents([]);
-    }
+  // Handle Entreprise form submission
+  const handleEntrepriseSubmit = (e) => {
+    e.preventDefault();
+    const newPFE = {
+      id: `entreprise${Date.now()}`,
+      ...entrepriseForm,
+      status: "Pending",
+      origin: "Company",
+      submittedBy: entrepriseForm.entreprise,
+    };
+    setTopics((prevTopics) => [...prevTopics, newPFE]);
+    setEntrepriseForm({
+      entreprise: "",
+      option: "",
+      intitule: "",
+      resume: "",
+      technologies: "",
+    });
   };
 
-  const handleAddIdea = () => {
-    if (newTopic.title.trim() && newTopic.description.trim()) {
-      const requirementsArray =
-        newTopic.requirements.trim() !== ""
-          ? newTopic.requirements.split(",").map((req) => req.trim())
-          : [];
-
-      setTopics((prevTopics) => [
-        ...prevTopics,
-        {
-          id: `custom${Date.now()}`,
-          title: newTopic.title,
-          description: newTopic.description,
-          status: "Pending",
-          origin: userRole,
-          submittedBy: "You",
-          tools: userRole === "Professor" ? newTopic.tools : undefined,
-          requirements: userRole === "Professor" ? requirementsArray : undefined,
-          teamMate: userRole === "Student" ? newTopic.teamMate : undefined,
-        },
-      ]);
-      setNewTopic({ title: "", description: "", teamMate: "", tools: "", requirements: "" });
-      setSuggestedStudents([]);
-    }
-  };
-
+  // Render topic table
   const renderTopicTable = (title, filterFn, showPick = false) => (
     <div className="rounded-xl border border-gray-200 shadow-sm p-6 bg-white mb-6 w-full">
       <h3 className="text-lg font-bold mb-4">{title}</h3>
@@ -237,7 +265,7 @@ const SubjectsManagement = () => {
               </td>
               <td className="py-3 text-center">
                 <button
-                  onClick={() => handleShowPopup(topic)}
+                  onClick={() => setPopupContent(topic)}
                   className="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 mr-2"
                 >
                   Check
@@ -274,75 +302,36 @@ const SubjectsManagement = () => {
   return (
     <div className="p-8 min-h-screen bg-gray-50 text-gray-800 w-full">
       {/* Popup */}
-      <Popup content={popupContent} onClose={handleClosePopup} />
+      <Popup content={popupContent} onClose={() => setPopupContent(null)} />
       {refusalPopup && (
         <RefusalPopup
           onClose={() => setRefusalPopup(null)}
-          onSubmit={handleRefusalSubmit}
+          onSubmit={(reason) => {
+            setTopics((prevTopics) =>
+              prevTopics.map((topic) =>
+                topic.id === refusalPopup.id ? { ...topic, status: "Refused", reason } : topic
+              )
+            );
+            setRefusalPopup(null);
+          }}
+        />
+      )}
+      {binomeValidation && (
+        <BinomeValidationPopup
+          validation={binomeValidation}
+          onClose={() => setBinomeValidation(null)}
+          onConfirm={(pfeId) => {
+            setTopics((prevTopics) =>
+              prevTopics.map((topic) =>
+                topic.id === pfeId ? { ...topic, status: "Validated" } : topic
+              )
+            );
+            setBinomeValidation(null);
+          }}
         />
       )}
 
       {/* Role-Based Views */}
-      {userRole === "Student" && (
-        <>
-          {renderTopicTable("Suggested by Professors", () =>
-            topics.filter((t) => t.origin === "Professor"),
-            true
-          )}
-          {renderTopicTable("Suggested by Companies", () =>
-            topics.filter((t) => t.origin === "Company"),
-            true
-          )}
-          <div className="rounded-xl border border-gray-200 shadow-sm p-6 bg-white">
-            <h3 className="text-lg font-semibold mb-4">Suggest a New Topic</h3>
-            <input
-              type="text"
-              value={newTopic.title}
-              onChange={(e) => setNewTopic({ ...newTopic, title: e.target.value })}
-              placeholder="Title"
-              className="w-full border px-3 py-2 mb-4 rounded-md"
-            />
-            <textarea
-              value={newTopic.description}
-              onChange={(e) => setNewTopic({ ...newTopic, description: e.target.value })}
-              placeholder="Description"
-              className="w-full border px-3 py-2 mb-4 rounded-md"
-            />
-            <div className="relative">
-              <input
-                type="text"
-                value={newTopic.teamMate}
-                onChange={(e) => handleStudentInput(e.target.value)}
-                placeholder="Team Mate"
-                className="w-full border px-3 py-2 mb-4 rounded-md"
-              />
-              {suggestedStudents.length > 0 && (
-                <ul className="absolute bg-white border rounded-md shadow-md w-full z-10">
-                  {suggestedStudents.map((name, index) => (
-                    <li
-                      key={index}
-                      className="px-3 py-2 hover:bg-gray-200 cursor-pointer"
-                      onClick={() => {
-                        setNewTopic({ ...newTopic, teamMate: name });
-                        setSuggestedStudents([]);
-                      }}
-                    >
-                      {name}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-            <button
-              onClick={handleAddIdea}
-              className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"
-            >
-              Add Idea
-            </button>
-          </div>
-        </>
-      )}
-
       {userRole === "Professor" && (
         <>
           {renderTopicTable("Suggested by Students", () =>
@@ -353,40 +342,162 @@ const SubjectsManagement = () => {
             topics.filter((t) => t.origin === "Company"),
             true
           )}
-          <div className="rounded-xl border border-gray-200 shadow-sm p-6 bg-white">
-            <h3 className="text-lg font-semibold mb-4">Suggest a New Topic</h3>
-            <input
-              type="text"
-              value={newTopic.title}
-              onChange={(e) => setNewTopic({ ...newTopic, title: e.target.value })}
-              placeholder="Title"
-              className="w-full border px-3 py-2 mb-4 rounded-md"
-            />
-            <textarea
-              value={newTopic.description}
-              onChange={(e) => setNewTopic({ ...newTopic, description: e.target.value })}
-              placeholder="Description"
-              className="w-full border px-3 py-2 mb-4 rounded-md"
-            />
-            <input
-              type="text"
-              value={newTopic.tools}
-              onChange={(e) => setNewTopic({ ...newTopic, tools: e.target.value })}
-              placeholder="Tools (comma-separated)"
-              className="w-full border px-3 py-2 mb-4 rounded-md"
-            />
-            <textarea
-              value={newTopic.requirements}
-              onChange={(e) => setNewTopic({ ...newTopic, requirements: e.target.value })}
-              placeholder="Requirements (comma-separated)"
-              className="w-full border px-3 py-2 mb-4 rounded-md"
-            />
-            <button
-              onClick={handleAddIdea}
-              className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"
-            >
-              Add Idea
-            </button>
+          <div className="rounded-xl border border-gray-200 shadow-sm p-6 bg-white mb-6">
+            <h3 className="text-lg font-semibold mb-4">Soumettre un PFE</h3>
+            <form onSubmit={handleEnseignantSubmit}>
+              <input
+                type="text"
+                value={enseignantForm.encadrant}
+                onChange={(e) => setEnseignantForm({ ...enseignantForm, encadrant: e.target.value })}
+                placeholder="Nom et prénom encadrant"
+                className="w-full border px-3 py-2 mb-4 rounded-md"
+                required
+              />
+              <input
+                type="text"
+                value={enseignantForm.coEncadrant}
+                onChange={(e) => setEnseignantForm({ ...enseignantForm, coEncadrant: e.target.value })}
+                placeholder="Nom et prénom co-encadrant"
+                className="w-full border px-3 py-2 mb-4 rounded-md"
+              />
+              <select
+                value={enseignantForm.option}
+                onChange={(e) => setEnseignantForm({ ...enseignantForm, option: e.target.value })}
+                className="w-full border px-3 py-2 mb-4 rounded-md"
+                required
+              >
+                <option value="">Option</option>
+                <option value="GL">GL</option>
+                <option value="IA">IA</option>
+                <option value="RSD">RSD</option>
+                <option value="SIC">SIC</option>
+              </select>
+              <select
+                value={enseignantForm.typeSujet}
+                onChange={(e) => setEnseignantForm({ ...enseignantForm, typeSujet: e.target.value })}
+                className="w-full border px-3 py-2 mb-4 rounded-md"
+                required
+              >
+                <option value="">Type de sujet</option>
+                <option value="classique">Classique</option>
+                <option value="innovant">Innovant</option>
+              </select>
+              <input
+                type="text"
+                value={enseignantForm.intitule}
+                onChange={(e) => setEnseignantForm({ ...enseignantForm, intitule: e.target.value })}
+                placeholder="Intitulé du PFE"
+                className="w-full border px-3 py-2 mb-4 rounded-md"
+                required
+              />
+              <textarea
+                value={enseignantForm.resume}
+                onChange={(e) => setEnseignantForm({ ...enseignantForm, resume: e.target.value })}
+                placeholder="Résumé"
+                className="w-full border px-3 py-2 mb-4 rounded-md"
+                required
+              />
+              <input
+                type="text"
+                value={enseignantForm.technologies}
+                onChange={(e) => setEnseignantForm({ ...enseignantForm, technologies: e.target.value })}
+                placeholder="Technologies utilisées"
+                className="w-full border px-3 py-2 mb-4 rounded-md"
+              />
+              <input
+                type="text"
+                value={enseignantForm.besoinsMateriel}
+                onChange={(e) => setEnseignantForm({ ...enseignantForm, besoinsMateriel: e.target.value })}
+                placeholder="Besoins matériel"
+                className="w-full border px-3 py-2 mb-4 rounded-md"
+              />
+              <button
+                type="submit"
+                className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"
+              >
+                Soumettre
+              </button>
+            </form>
+          </div>
+        </>
+      )}
+
+      {userRole === "Student" && (
+        <>
+          {renderTopicTable("Suggested by Professors", () =>
+            topics.filter((t) => t.origin === "Professor"),
+            true
+          )}
+          {renderTopicTable("Suggested by Companies", () =>
+            topics.filter((t) => t.origin === "Company"),
+            true
+          )}
+          <div className="rounded-xl border border-gray-200 shadow-sm p-6 bg-white mb-6">
+            <h3 className="text-lg font-semibold mb-4">Proposer un PFE</h3>
+            <form onSubmit={handleEtudiantSubmit}>
+              <input
+                type="text"
+                value={etudiantForm.etudiant1}
+                onChange={(e) => setEtudiantForm({ ...etudiantForm, etudiant1: e.target.value })}
+                placeholder="Nom et prénom étudiant 1"
+                className="w-full border px-3 py-2 mb-4 rounded-md"
+                required
+              />
+              <input
+                type="text"
+                value={etudiantForm.etudiant2}
+                onChange={(e) => setEtudiantForm({ ...etudiantForm, etudiant2: e.target.value })}
+                placeholder="Nom et prénom étudiant 2 (binôme)"
+                className="w-full border px-3 py-2 mb-4 rounded-md"
+              />
+              <select
+                value={etudiantForm.option}
+                onChange={(e) => setEtudiantForm({ ...etudiantForm, option: e.target.value })}
+                className="w-full border px-3 py-2 mb-4 rounded-md"
+                required
+              >
+                <option value="">Option</option>
+                <option value="GL">GL</option>
+                <option value="IA">IA</option>
+                <option value="RSD">RSD</option>
+                <option value="SIC">SIC</option>
+              </select>
+              <input
+                type="text"
+                value={etudiantForm.intitule}
+                onChange={(e) => setEtudiantForm({ ...etudiantForm, intitule: e.target.value })}
+                placeholder="Intitulé du PFE"
+                className="w-full border px-3 py-2 mb-4 rounded-md"
+                required
+              />
+              <textarea
+                value={etudiantForm.resume}
+                onChange={(e) => setEtudiantForm({ ...etudiantForm, resume: e.target.value })}
+                placeholder="Résumé"
+                className="w-full border px-3 py-2 mb-4 rounded-md"
+                required
+              />
+              <input
+                type="text"
+                value={etudiantForm.technologies}
+                onChange={(e) => setEtudiantForm({ ...etudiantForm, technologies: e.target.value })}
+                placeholder="Technologies utilisées"
+                className="w-full border px-3 py-2 mb-4 rounded-md"
+              />
+              <input
+                type="text"
+                value={etudiantForm.besoinsMateriel}
+                onChange={(e) => setEtudiantForm({ ...etudiantForm, besoinsMateriel: e.target.value })}
+                placeholder="Besoins matériel"
+                className="w-full border px-3 py-2 mb-4 rounded-md"
+              />
+              <button
+                type="submit"
+                className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"
+              >
+                Proposer
+              </button>
+            </form>
           </div>
         </>
       )}
@@ -396,6 +507,59 @@ const SubjectsManagement = () => {
           {renderTopicTable("Your Suggested Topics", () =>
             topics.filter((t) => t.origin === "Company")
           )}
+          <div className="rounded-xl border border-gray-200 shadow-sm p-6 bg-white mb-6">
+            <h3 className="text-lg font-semibold mb-4">Proposer un Projet</h3>
+            <form onSubmit={handleEntrepriseSubmit}>
+              <input
+                type="text"
+                value={entrepriseForm.entreprise}
+                onChange={(e) => setEntrepriseForm({ ...entrepriseForm, entreprise: e.target.value })}
+                placeholder="Nom de l'entreprise"
+                className="w-full border px-3 py-2 mb-4 rounded-md"
+                required
+              />
+              <select
+                value={entrepriseForm.option}
+                onChange={(e) => setEntrepriseForm({ ...entrepriseForm, option: e.target.value })}
+                className="w-full border px-3 py-2 mb-4 rounded-md"
+                required
+              >
+                <option value="">Option</option>
+                <option value="GL">GL</option>
+                <option value="IA">IA</option>
+                <option value="RSD">RSD</option>
+                <option value="SIC">SIC</option>
+              </select>
+              <input
+                type="text"
+                value={entrepriseForm.intitule}
+                onChange={(e) => setEntrepriseForm({ ...entrepriseForm, intitule: e.target.value })}
+                placeholder="Intitulé du PFE"
+                className="w-full border px-3 py-2 mb-4 rounded-md"
+                required
+              />
+              <textarea
+                value={entrepriseForm.resume}
+                onChange={(e) => setEntrepriseForm({ ...entrepriseForm, resume: e.target.value })}
+                placeholder="Résumé"
+                className="w-full border px-3 py-2 mb-4 rounded-md"
+                required
+              />
+              <input
+                type="text"
+                value={entrepriseForm.technologies}
+                onChange={(e) => setEntrepriseForm({ ...entrepriseForm, technologies: e.target.value })}
+                placeholder="Technologies utilisées"
+                className="w-full border px-3 py-2 mb-4 rounded-md"
+              />
+              <button
+                type="submit"
+                className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"
+              >
+                Soumettre
+              </button>
+            </form>
+          </div>
         </>
       )}
 
