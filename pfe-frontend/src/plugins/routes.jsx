@@ -1,4 +1,8 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import AuthenticatedRoute from "./authenticatedUserRoute";
+import RoleBasedRoute from "./roleBasedRoute";
+import Cookies from 'js-cookie';
+
 import Login from "../pages/login";
 import Dashboard from "../layouts/dashboardLayout";
 import Home from "../components/home";
@@ -10,9 +14,6 @@ import Deadlines from "../components/deadlines";
 import Settings from "../components/settings";
 import WishList from "../components/wishList";
 import Unauthorized from "../pages/unauthorized";
-import AuthenticatedRoute from "./authenticatedUserRoute";
-import RoleBasedRoute from "./roleBasedRoute";
-import Cookies from "js-cookie";
 import AdminEmailSettings from "../components/ui/adminUI/Temail1";
 import AddUserForm from "../components/ui/adminUI/email2";
 import PFEEmailForm from "../components/ui/adminUI/email4";
@@ -27,17 +28,18 @@ import PFEEmailNotification2 from "../components/ui/adminUI/email12";
 import PFEEventNotification from "../components/ui/adminUI/email13";
 
 const AppRoutes = () => {
-  const authToken = Cookies.get("authToken"); // Check for the token
-  const isAuthenticated = !!authToken; // Boolean value for authentication
+  const token = Cookies.get("authToken");
+  const isAuthenticated = token ? true : false;
+
   const user = Cookies.get("user");
   const parsedUser = user ? JSON.parse(user) : null;
   const userRole = parsedUser?.role || "No role found";
-
   return (
     <Routes>
       <Route path="/" element={<Login />} />
       <Route path="/error" element={<Unauthorized />} />
 
+      {/* Protected Dashboard Route */}
       <Route
         path="/dashboard"
         element={
@@ -47,41 +49,43 @@ const AppRoutes = () => {
         }
       >
         <Route path="home" element={<Home />} />
-
-        <Route
-          element={
-            <RoleBasedRoute
-              rolesAllowed={["admin"]}
-              userRole={userRole}
-              isAuthenticated={isAuthenticated}
-            />
-          }
-        >
-          <Route path="usersManagement" element={<UsersManagement />} />
-          <Route path="emails" element={<Emails />}>
-            <Route path="email1" element={<AdminEmailSettings />} />
-            <Route path="email2" element={<PFEEmailForm />} />
-            <Route path="email3" element={<AddUserForm />} />
-            <Route path="email5" element={<PFEReminderForm />} />
-            <Route path="email6" element={<PFEEncadrementForm />} />
-            <Route path="email7" element={<EncadrementInvitationForm />} />
-            <Route path="email8" element={<NonSelectionNotificationForm />} />
-            <Route path="email9" element={<PFEProposalForm />} />
-            <Route path="email10" element={<PFEVALIDATION />} />
-            <Route path="email11" element={<PFEEmailNotification />} />
-            <Route path="email12" element={<PFEEmailNotification2 />} />
-            <Route path="email13" element={<PFEEventNotification />} />
-          </Route>
-         
-        </Route>
- <Route path="deadlines" element={<Deadlines />} />
-          <Route path="settings" element={<Settings />} />
-          <Route path="wishList" element={<WishList />} />
-        <Route path="subjectsManagement" element={<SubjectsManagement />} />
-        <Route path="defenseSchedule" element={<DefenseSchedule />} />
+        <Route path="usersManagement" element={<UsersManagement />} />
+        <Route path="deadlines" element={<Deadlines />} />
         <Route path="settings" element={<Settings />} />
         <Route path="wishList" element={<WishList />} />
+        <Route path="subjectsManagement" element={<SubjectsManagement />} />
+        <Route path="defenseSchedule" element={<DefenseSchedule />} />
+
+        {/* Admin-Only Emails Section */}
+        <Route
+          path="emails"
+          element={
+            <RoleBasedRoute
+              isAuthenticated={isAuthenticated}
+              userRole={userRole}
+              rolesAllowed={["admin"]}
+            >
+              <Emails />
+            </RoleBasedRoute>
+          }
+        >
+          <Route path="email1" element={<AdminEmailSettings />} />
+          <Route path="email2" element={<PFEEmailForm />} />
+          <Route path="email3" element={<AddUserForm />} />
+          <Route path="email5" element={<PFEReminderForm />} />
+          <Route path="email6" element={<PFEEncadrementForm />} />
+          <Route path="email7" element={<EncadrementInvitationForm />} />
+          <Route path="email8" element={<NonSelectionNotificationForm />} />
+          <Route path="email9" element={<PFEProposalForm />} />
+          <Route path="email10" element={<PFEVALIDATION />} />
+          <Route path="email11" element={<PFEEmailNotification />} />
+          <Route path="email12" element={<PFEEmailNotification2 />} />
+          <Route path="email13" element={<PFEEventNotification />} />
+        </Route>
       </Route>
+
+      {/* Fallback Route */}
+      <Route path="*" element={<Unauthorized />} />
     </Routes>
   );
 };

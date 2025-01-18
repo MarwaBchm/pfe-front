@@ -35,7 +35,7 @@ const Login = () => {
 
       if (response.status === 200) {
         const { token, user } = response.data;
-
+console.log('login successfull');
         // Calculate 2 hours from the current time
         const expiresIn = new Date(new Date().getTime() + 2 * 60 * 60 * 1000); // 2 hours
 
@@ -48,6 +48,7 @@ const Login = () => {
           secure: isSecure, // Use secure cookies only in HTTPS
           sameSite: "Strict", // Prevent CSRF attacks
         });
+        console.log('token set ');
 
         // Store user info in cookies with a 2-hour expiration
         Cookies.set("user", JSON.stringify(user), {
@@ -55,6 +56,7 @@ const Login = () => {
           secure: isSecure, // Use secure cookies only in HTTPS
           sameSite: "Strict",
         });
+        console.log('coockie set ');
 
         // Redirect based on user role
         navigate("/dashboard/home");
