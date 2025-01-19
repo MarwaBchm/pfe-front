@@ -74,48 +74,71 @@ const AdminEmailSettings = () => {
   };
 
   return (
-    <div className="email-settings">
-      <h3 className="email-settings-title">Automatic Email Settings</h3>
-      <form onSubmit={handleFormSubmit} className="email-settings-form">
+    <div className="max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-lg">
+      <h3 className="text-2xl font-semibold mb-4 text-center text-indigo-600">
+        Automatic Email Settings
+      </h3>
+      <form onSubmit={handleFormSubmit} className="space-y-6">
         <div className="form-group">
-          <label>Email Start Date:</label>
+          <label className="block text-lg font-medium text-gray-700">
+            Email Start Date:
+          </label>
           <input
             type="date"
             name="emailStartDate"
             value={formData.emailStartDate}
             onChange={handleInputChange}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none"
           />
         </div>
+
         <div className="form-group">
-          <label>Email Reminder Dates (comma-separated):</label>
+          <label className="block text-lg font-medium text-gray-700">
+            Email Reminder Dates (comma-separated):
+          </label>
           <input
             type="text"
             name="emailReminderDates"
             placeholder="e.g., 2024-12-10, 2024-12-20"
             value={formData.emailReminderDates}
             onChange={handleInputChange}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none"
           />
         </div>
+
         <div className="form-group">
-          <label>Form Closure Date:</label>
+          <label className="block text-lg font-medium text-gray-700">
+            Form Closure Date:
+          </label>
           <input
             type="date"
             name="formClosureDate"
             value={formData.formClosureDate}
             onChange={handleInputChange}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none"
           />
         </div>
-        <button type="submit" className="btn btn-primary">
+
+        <button
+          type="submit"
+          className="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 transition duration-200"
+        >
           Save Settings
         </button>
       </form>
-      {formStatus && <p className="form-status">{formStatus}</p>}
-      <button
+
+      {formStatus && (
+        <p className="mt-4 text-center text-lg font-medium text-green-600">
+          {formStatus}
+        </p>
+      )}
+
+      {/* <button
         onClick={handleReviewPageClick}
-        className="btn btn-secondary review-button"
+        className="w-full mt-4 bg-gray-200 text-gray-700 py-2 rounded-md hover:bg-gray-300 focus:ring-2 focus:ring-gray-500 transition duration-200"
       >
         Go to Review Page
-      </button>
+      </button> */}
     </div>
   );
 };

@@ -9,18 +9,18 @@ import DefenseSchedule from "../components/defenseSchedule";
 import Deadlines from "../components/deadlines";
 import Settings from "../components/settings";
 import ProfilePage from "../components/profile";
-import AdminEmailSettings from "../components/Temail1";/*1*/ 
-import AddUserForm from "../components/email2";
+import AdminEmailSettings from "../components/Temail1"; /*1*/
+import AddUserForm from "../components/email2"; /*3*/
 import PFEEmailForm from "../components/email4";
 import PFEReminderForm from "../components/email5";
 import PFEEncadrementForm from "../components/email6";
 import EncadrementInvitationForm from "../components/email7";
 import NonSelectionNotificationForm from "../components/email8";
 import PFEProposalForm from "../components/email9";
-import PFEVALIDATION from "../components/email10";/*10*/ 
+import PFEVALIDATION from "../components/email10"; /*10*/
 import PFEEmailNotification from "../components/email11";
-import PFEEmailNotification2 from "../components/email12";/*12*/
-import PFEEventNotification from "../components/email13";/*13*/
+import PFEEmailNotification2 from "../components/email12"; /*12*/
+import PFEEventNotification from "../components/email13"; /*13*/
 const AppRoutes = () => {
   return (
     <Router>
@@ -42,6 +42,7 @@ const AppRoutes = () => {
           <Route path="settings" element={<Settings />} />
           <Route path="profile" element={<ProfilePage />} />
           {/* <Route path="email" element={<Temail1 />} /> */}
+          
         </Route>
         <Route path="/email3" element={<AddUserForm />} />
         <Route path="/email1" element={<AdminEmailSettings />} />

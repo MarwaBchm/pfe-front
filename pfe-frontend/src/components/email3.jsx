@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
-import "./emails.css";
-// import "bootstrap/dist/css/bootstrap.min.css";
+// import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const AddUserForm = () => {
@@ -54,75 +52,83 @@ const AddUserForm = () => {
       setFormStatus("Failed to add user. Please try again.");
     }
   };
+
   const handleReviewPageClick = () => {
     navigate("/dashboard/emails/"); // This will navigate to the /review page
   };
+
   return (
-    <div className="container mt-5">
-      <div className="card">
-        <div className="card-header bg-primary text-white text-center">
-          <h4>Add New User</h4>
-        </div>
-        <div className="card-body">
-          <form onSubmit={handleFormSubmit}>
-            <div className="mb-3">
-              <label htmlFor="name" className="form-label">
-                Name:
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                className="form-control"
-                placeholder="Enter user's name"
-                value={formData.name}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="email" className="form-label">
-                Email:
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                className="form-control"
-                placeholder="Enter user's email"
-                value={formData.email}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <button type="submit" className="btn btn-primary w-100">
-              Add User
-            </button>
-          </form>
-          {formStatus && (
-            <div
-              className={`mt-3 alert ${
-                formStatus.includes("successfully")
-                  ? "alert-success"
-                  : "alert-danger"
-              }`}
-            >
-              {formStatus}
-            </div>
-          )}
-          {generatedPassword && (
-            <div className="mt-3">
-              <strong>Generated Password:</strong> {generatedPassword}
-            </div>
-          )}
-          <button
-            onClick={handleReviewPageClick}
-            className="btn btn-secondary w-100 mt-3"
-          >
-            Go to Review Page
-          </button>
-        </div>
+    <div className="max-w-lg mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
+      <div className="text-center mb-6">
+        <h4 className="text-2xl font-semibold text-blue-600">Add New User</h4>
       </div>
+      <form onSubmit={handleFormSubmit} className="space-y-6">
+        <div>
+          <label
+            htmlFor="name"
+            className="block text-lg font-medium text-gray-700"
+          >
+            Name:
+          </label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            placeholder="Enter user's name"
+            value={formData.name}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+        <div>
+          <label
+            htmlFor="email"
+            className="block text-lg font-medium text-gray-700"
+          >
+            Email:
+          </label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            placeholder="Enter user's email"
+            value={formData.email}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+        <button
+          type="submit"
+          className="w-full py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        >
+          Add User
+        </button>
+      </form>
+
+      {formStatus && (
+        <div
+          className={`mt-3 p-4 rounded-md text-white ${
+            formStatus.includes("successfully") ? "bg-green-500" : "bg-red-500"
+          }`}
+        >
+          {formStatus}
+        </div>
+      )}
+
+      {generatedPassword && (
+        <div className="mt-4 text-lg font-medium text-gray-700">
+          <strong>Generated Password:</strong> {generatedPassword}
+        </div>
+      )}
+
+      <button
+        onClick={handleReviewPageClick}
+        className="w-full mt-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500"
+      >
+        Go to Review Page
+      </button>
     </div>
   );
 };
