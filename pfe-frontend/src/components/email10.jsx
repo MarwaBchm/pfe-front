@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import "./PFEValidation.css"; // Custom CSS file
 
 const PFEVALIDATION = () => {
   const [formData, setFormData] = useState({
@@ -89,102 +88,128 @@ const PFEVALIDATION = () => {
   };
 
   return (
-    <div className="container">
-      <div className="card">
-        <div className="card-header">
-          <h4>Project Proposal Management</h4>
+    <div className="max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-lg">
+      <h3 className="text-2xl font-semibold mb-4 text-center text-indigo-600">
+        Project Proposal Management
+      </h3>
+
+      <form onSubmit={handleFormSubmit}>
+        {/* Project Name Input */}
+        <div className="form-group mb-4">
+          <label
+            htmlFor="projectName"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Project Name:
+          </label>
+          <input
+            type="text"
+            id="projectName"
+            name="projectName"
+            placeholder="Enter the project name"
+            className="form-control mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            value={formData.projectName}
+            onChange={handleInputChange}
+            required
+          />
         </div>
-        <div className="card-body">
-          <form onSubmit={handleFormSubmit}>
-            {/* Project Name Input */}
-            <div className="form-group">
-              <label htmlFor="projectName">Project Name:</label>
-              <input
-                type="text"
-                id="projectName"
-                name="projectName"
-                className="form-control"
-                value={formData.projectName}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
 
-            {/* Proposer Type Input (Dropdown) */}
-            <div className="form-group">
-              <label htmlFor="proposerType">Proposer Type:</label>
-              <select
-                id="proposerType"
-                name="proposerType"
-                className="form-control"
-                value={formData.proposerType}
-                onChange={handleInputChange}
-                required
-              >
-                <option value="">Select Proposer Type</option>
-                <option value="Teacher">Teacher</option>
-                <option value="Student">Student</option>
-                <option value="Company">Company</option>
-              </select>
-            </div>
-
-            {/* Status Dropdown */}
-            <div className="form-group">
-              <label htmlFor="status">Proposal Status:</label>
-              <select
-                id="status"
-                name="status"
-                className="form-control"
-                value={formData.status}
-                onChange={handleInputChange}
-                required
-              >
-                <option value="Pending">Pending</option>
-                <option value="Approved">Approved</option>
-                <option value="Rejected">Rejected</option>
-                <option value="Request More Info">Request More Info</option>
-              </select>
-            </div>
-
-            {/* Custom Message Input */}
-            <div className="form-group">
-              <label htmlFor="customMessage">Custom Message (optional):</label>
-              <textarea
-                id="customMessage"
-                name="customMessage"
-                className="form-control"
-                rows="4"
-                value={formData.customMessage}
-                onChange={handleInputChange}
-              />
-            </div>
-
-            {/* Submit Button */}
-            <button type="submit" className="btn-submit">
-              Generate Email Preview
-            </button>
-          </form>
-
-          {/* Form Status */}
-          {formStatus && (
-            <div
-              className={`alert ${
-                formStatus.includes("successfully") ? "alert-success" : "alert-danger"
-              }`}
-            >
-              {formStatus}
-            </div>
-          )}
-
-          {/* Display Generated Email Preview */}
-          {generatedEmail && (
-            <div className="email-preview">
-              <h5>Email Preview:</h5>
-              <pre>{generatedEmail}</pre>
-            </div>
-          )}
+        {/* Proposer Type Input (Dropdown) */}
+        <div className="form-group mb-4">
+          <label
+            htmlFor="proposerType"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Proposer Type:
+          </label>
+          <select
+            id="proposerType"
+            name="proposerType"
+            className="form-control mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            value={formData.proposerType}
+            onChange={handleInputChange}
+            required
+          >
+            <option value="">Select Proposer Type</option>
+            <option value="Teacher">Teacher</option>
+            <option value="Student">Student</option>
+            <option value="Company">Company</option>
+          </select>
         </div>
-      </div>
+
+        {/* Status Dropdown */}
+        <div className="form-group mb-4">
+          <label
+            htmlFor="status"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Proposal Status:
+          </label>
+          <select
+            id="status"
+            name="status"
+            className="form-control mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            value={formData.status}
+            onChange={handleInputChange}
+            required
+          >
+            <option value="Pending">Pending</option>
+            <option value="Approved">Approved</option>
+            <option value="Rejected">Rejected</option>
+            <option value="Request More Info">Request More Info</option>
+          </select>
+        </div>
+
+        {/* Custom Message Input */}
+        <div className="mb-4">
+          <label
+            htmlFor="customMessage"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Custom Message (optional):
+          </label>
+          <textarea
+            id="customMessage"
+            name="customMessage"
+            placeholder="Enter any additional message here (optional)"
+            className="form-control mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            rows="4"
+            value={formData.customMessage}
+            onChange={handleInputChange}
+          />
+        </div>
+
+        {/* Submit Button */}
+        <button
+          type="submit"
+          className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition duration-300 mt-4"
+        >
+          Generate Email Preview
+        </button>
+      </form>
+
+      {/* Form Status */}
+      {formStatus && (
+        <div
+          className={`alert mt-4 ${
+            formStatus.includes("successfully")
+              ? "alert-success"
+              : "alert-danger"
+          }`}
+        >
+          {formStatus}
+        </div>
+      )}
+
+      {/* Display Generated Email Preview */}
+      {generatedEmail && (
+        <div className="email-preview mt-4">
+          <h5 className="text-lg font-semibold">Email Preview:</h5>
+          <pre className="bg-gray-100 p-4 rounded-lg border border-gray-300">
+            {generatedEmail}
+          </pre>
+        </div>
+      )}
     </div>
   );
 };

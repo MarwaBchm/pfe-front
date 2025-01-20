@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-// import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
 
 const NonSelectionNotificationForm = () => {
@@ -14,7 +13,7 @@ const NonSelectionNotificationForm = () => {
 
   const navigate = useNavigate();
   const [formStatus, setFormStatus] = useState("");
-  const [generatedEmail, setGeneratedEmail] = useState(""); // Nouveau state pour le message généré
+  const [generatedEmail, setGeneratedEmail] = useState("");
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -27,13 +26,11 @@ const NonSelectionNotificationForm = () => {
   const handleFormSubmit = (e) => {
     e.preventDefault();
 
-    // Validation
     if (!formData.studentName || !formData.projectTitle) {
       setFormStatus("Please fill in all the required fields.");
       return;
     }
 
-    // Génération du message email
     const emailMessage = `
       Subject: ${formData.subject}
       ---------------------------------------------------------
@@ -57,157 +54,171 @@ const NonSelectionNotificationForm = () => {
       PFE Management Team
     `;
 
-    // Mettre à jour le message généré
     setGeneratedEmail(emailMessage);
-    setFormStatus("Non-selection notification email configured successfully!"); // Message de succès
+    setFormStatus("Non-selection notification email configured successfully!");
   };
+
   const handleReviewPageClick = () => {
-    navigate("/dashboard/emails/"); // This will navigate to the /review page
+    navigate("/dashboard/emails/");
   };
+
   return (
-    <div className="container mt-5">
-      <div className="card">
-        <div className="card-header bg-danger text-white text-center">
-          <h4>Configure Non-Selection Notification Email</h4>
-        </div>
-        <div className="card-body">
-          <form onSubmit={handleFormSubmit}>
-            {/* Subject Input */}
-            <div className="mb-3">
-              <label htmlFor="subject" className="form-label">
-                Email Subject:
-              </label>
-              <input
-                type="text"
-                id="subject"
-                name="subject"
-                className="form-control"
-                placeholder="PFE Project Submission Status: Not Selected"
-                value={formData.subject}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
+    <div className="max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-lg">
+      <h3 className="text-2xl font-semibold mb-4 text-center text-indigo-600">
+        Configure Non-Selection Notification Email
+      </h3>
 
-            {/* Student Name Input */}
-            <div className="mb-3">
-              <label htmlFor="studentName" className="form-label">
-                Student Name:
-              </label>
-              <input
-                type="text"
-                id="studentName"
-                name="studentName"
-                className="form-control"
-                placeholder="Enter Student's Name"
-                value={formData.studentName}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-
-            {/* Enterprise Name Input */}
-            <div className="mb-3">
-              <label htmlFor="enterpriseName" className="form-label">
-                Enterprise Name (optional):
-              </label>
-              <input
-                type="text"
-                id="enterpriseName"
-                name="enterpriseName"
-                className="form-control"
-                placeholder="Enter Enterprise Name"
-                value={formData.enterpriseName}
-                onChange={handleInputChange}
-              />
-            </div>
-
-            {/* Project Title Input */}
-            <div className="mb-3">
-              <label htmlFor="projectTitle" className="form-label">
-                Project Title:
-              </label>
-              <input
-                type="text"
-                id="projectTitle"
-                name="projectTitle"
-                className="form-control"
-                placeholder="Enter Project Title"
-                value={formData.projectTitle}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-
-            {/* Reason for Non-Selection */}
-            <div className="mb-3">
-              <label htmlFor="reason" className="form-label">
-                Reason for Non-Selection:
-              </label>
-              <textarea
-                id="reason"
-                name="reason"
-                className="form-control"
-                rows="3"
-                placeholder="Enter the reason for non-selection"
-                value={formData.reason}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-
-            {/* Custom Message Input */}
-            <div className="mb-3">
-              <label htmlFor="customMessage" className="form-label">
-                Custom Message (optional):
-              </label>
-              <textarea
-                id="customMessage"
-                name="customMessage"
-                className="form-control"
-                rows="4"
-                placeholder="Add any additional message here..."
-                value={formData.customMessage}
-                onChange={handleInputChange}
-              />
-            </div>
-
-            {/* Submit Button */}
-            <button type="submit" className="btn btn-danger w-100">
-              Generate Non-Selection Notification Email
-            </button>
-          </form>
-
-          {/* Form Status (Message under the form) */}
-          {formStatus && (
-            <div
-              className={`mt-3 alert ${
-                formStatus.includes("successfully")
-                  ? "alert-success"
-                  : "alert-danger"
-              }`}
-            >
-              {formStatus}
-            </div>
-          )}
-
-          {/* Display Generated Email Message */}
-          {generatedEmail && (
-            <div className="mt-3">
-              <h5>Generated Email Preview:</h5>
-              <div className="alert alert-secondary">
-                <pre>{generatedEmail}</pre>
-              </div>
-            </div>
-          )}
-          <button
-            onClick={handleReviewPageClick}
-            className="btn btn-secondary w-100 mt-3"
+      <form onSubmit={handleFormSubmit} className="space-y-6">
+        {/* Subject Input */}
+        <div>
+          <label
+            htmlFor="subject"
+            className="block text-sm font-medium text-gray-700"
           >
-            Go to Review Page
-          </button>
+            Email Subject:
+          </label>
+          <input
+            type="text"
+            id="subject"
+            name="subject"
+            className="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            value={formData.subject}
+            onChange={handleInputChange}
+            required
+          />
         </div>
-      </div>
+
+        {/* Student Name Input */}
+        <div>
+          <label
+            htmlFor="studentName"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Student Name:
+          </label>
+          <input
+            type="text"
+            id="studentName"
+            name="studentName"
+            className="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Enter Student's Name"
+            value={formData.studentName}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+
+        {/* Enterprise Name Input */}
+        <div>
+          <label
+            htmlFor="enterpriseName"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Enterprise Name (optional):
+          </label>
+          <input
+            type="text"
+            id="enterpriseName"
+            name="enterpriseName"
+            className="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Enter Enterprise Name"
+            value={formData.enterpriseName}
+            onChange={handleInputChange}
+          />
+        </div>
+
+        {/* Project Title Input */}
+        <div>
+          <label
+            htmlFor="projectTitle"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Project Title:
+          </label>
+          <input
+            type="text"
+            id="projectTitle"
+            name="projectTitle"
+            className="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Enter Project Title"
+            value={formData.projectTitle}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+
+        {/* Reason for Non-Selection */}
+        <div>
+          <label
+            htmlFor="reason"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Reason for Non-Selection:
+          </label>
+          <textarea
+            id="reason"
+            name="reason"
+            className="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            rows="3"
+            placeholder="Enter the reason for non-selection"
+            value={formData.reason}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+
+        {/* Custom Message Input */}
+        <div>
+          <label
+            htmlFor="customMessage"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Custom Message (optional):
+          </label>
+          <textarea
+            id="customMessage"
+            name="customMessage"
+            className="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            rows="4"
+            placeholder="Add any additional message here..."
+            value={formData.customMessage}
+            onChange={handleInputChange}
+          />
+        </div>
+
+        {/* Submit Button */}
+        <button
+          type="submit"
+          className="w-full py-2 px-4 text-white bg-blue-500 hover:bg-blue-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+        >
+          Submit
+        </button>
+      </form>
+
+      {/* Form Status */}
+      {formStatus && (
+        <div
+          className={`mt-6 p-4 rounded-md ${
+            formStatus.includes("successfully")
+              ? "bg-green-100 text-green-700"
+              : "bg-red-100 text-red-700"
+          }`}
+        >
+          {formStatus}
+        </div>
+      )}
+
+      {/* Generated Email */}
+      {generatedEmail && (
+        <div className="mt-6">
+          <h5 className="text-lg font-medium text-gray-800">
+            Generated Email Preview:
+          </h5>
+          <div className="mt-2 p-4 bg-gray-100 text-gray-700 rounded-md">
+            <pre className="whitespace-pre-wrap">{generatedEmail}</pre>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import "./PFEEmailNotification.css";
 
-const PFEEmailNotification = () => {
+const PFEEmailNotification2 = () => {
   const [assignments, setAssignments] = useState([
     {
       project: { id: 1, name: "PFE Web Development" },
@@ -50,14 +49,14 @@ const PFEEmailNotification = () => {
   const [formStatus, setFormStatus] = useState("");
 
   const sendEmail = (to, subject, content) => {
-    console.log(`Email envoyé à : ${to}`);
-    console.log(`Objet : ${subject}`);
-    console.log(`Contenu : ${content}`);
+    console.log(`Email sent to: ${to}`);
+    console.log(`Subject: ${subject}`);
+    console.log(`Content: ${content}`);
   };
 
   const handleGenerateEmail = () => {
     const emailMessages = assignments.map((assignment) => {
-      // Envoi des emails aux enseignants
+      // Send emails to the teachers
       const teacherEmails = [
         assignment.encadrant,
         assignment.president,
@@ -67,102 +66,113 @@ const PFEEmailNotification = () => {
       const teacherMessages = teacherEmails.map((teacher) => {
         if (teacher) {
           const emailContent = `
-            Bonjour ${teacher.name},
+            Hello ${teacher.name},
 
-            Vous avez été affecté en tant que ${
-              teacher.role
-            } pour le projet suivant :
-            - Projet : ${assignment.project.name}
-            - Etudiant : ${
+            You have been assigned as ${teacher.role} for the following project:
+            - Project: ${assignment.project.name}
+            - Student: ${
               students.find(
                 (student) => student.projectId === assignment.project.id
               ).name
             }
 
-            Cordialement,
-            L’équipe de gestion des PFE
+            Best regards,
+            The PFE Management Team
           `;
           sendEmail(
             teacher.email,
-            `Affectation Jury PFE - ${assignment.project.name}`,
+            `Jury Assignment for PFE - ${assignment.project.name}`,
             emailContent
           );
           return {
-            subject: `Affectation Jury PFE - ${assignment.project.name}`,
+            subject: `Jury Assignment for PFE - ${assignment.project.name}`,
             emailMessage: emailContent,
             recipient: teacher.email,
           };
         }
       });
 
-      // Envoi de l'email à l'étudiant
+      // Send email to the student
       const student = students.find(
         (student) => student.projectId === assignment.project.id
       );
       const studentEmailContent = `
-        Bonjour ${student.name},
+        Hello ${student.name},
 
-        Voici la composition de votre jury pour la soutenance de votre projet :
-        - Président : ${assignment.president.name}
-        - Examinateur : ${assignment.examinateur.name}
-        - Encadrant : ${assignment.encadrant.name}
+        Here is the composition of your jury for the defense of your project:
+        - President: ${assignment.president.name}
+        - Examiner: ${assignment.examinateur.name}
+        - Supervisor: ${assignment.encadrant.name}
 
-        Merci de vous préparer pour votre soutenance.
+        Please prepare for your defense.
 
-        Cordialement,
-        L’équipe de gestion des PFE
+        Best regards,
+        The PFE Management Team
       `;
       sendEmail(
         student.email,
-        `Composition Jury PFE - ${assignment.project.name}`,
+        `PFE Jury Composition - ${assignment.project.name}`,
         studentEmailContent
       );
 
       return {
-        subject: `Composition Jury PFE - ${assignment.project.name}`,
+        subject: `PFE Jury Composition - ${assignment.project.name}`,
         emailMessage: studentEmailContent,
         recipient: student.email,
       };
     });
 
     setGeneratedEmail(emailMessages);
-    setFormStatus("Emails générés avec succès !");
+    setFormStatus("Emails generated successfully!");
   };
 
   return (
-    <div className="container">
-      <div className="card">
-        <div className="card-header">
-          <h4>Notification par Email pour l'Affectation du Jury PFE</h4>
-        </div>
-        <div className="card-body">
-          <button onClick={handleGenerateEmail} className="btn">
-            Générer les emails d'affectation
-          </button>
+    <div className="max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-lg">
+      <h3 className="text-2xl font-semibold mb-4 text-center text-indigo-600">
+        Email Notification for PFE Jury Assignment
+      </h3>
 
-          {formStatus && (
-            <div className={`status ${formStatus.includes("succès") ? "success" : "error"}`}>
-              {formStatus}
-            </div>
-          )}
+      <div className="p-6">
+        <button
+          onClick={handleGenerateEmail}
+          className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition duration-300"
+        >
+          Generate Jury Assignment Emails
+        </button>
 
-          {/* Affichage des emails générés */}
-          {generatedEmail.length > 0 && (
-            <div className="emails">
-              <h5>Emails générés :</h5>
-              {generatedEmail.map((email, index) => (
-                <div key={index} className="email-message">
-                  <h6>À : {email.recipient}</h6>
-                  <p><strong>Objet:</strong> {email.subject}</p>
-                  <pre>{email.emailMessage}</pre>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+        {formStatus && (
+          <div
+            className={`mt-4 p-4 rounded-lg ${
+              formStatus.includes("successfully")
+                ? "bg-green-200 text-green-800"
+                : "bg-red-200 text-red-800"
+            }`}
+          >
+            {formStatus}
+          </div>
+        )}
+
+        {/* Display generated emails */}
+        {generatedEmail.length > 0 && (
+          <div className="mt-4">
+            <h5 className="text-xl font-semibold">Generated Emails:</h5>
+            {generatedEmail.map((email, index) => (
+              <div
+                key={index}
+                className="mt-4 p-4 border border-gray-300 rounded-lg"
+              >
+                <h6 className="font-semibold">To: {email.recipient}</h6>
+                <p className="text-sm">
+                  <strong>Subject:</strong> {email.subject}
+                </p>
+                <pre className="mt-2 text-sm">{email.emailMessage}</pre>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
-export default PFEEmailNotification;
+export default PFEEmailNotification2;

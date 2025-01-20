@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-// import "bootstrap/dist/css/bootstrap.min.css";
 
 const PFEEmailNotification = () => {
   const [students, setStudents] = useState([]); // List of students
@@ -165,19 +164,23 @@ const PFEEmailNotification = () => {
   };
 
   return (
-    <div className="container mt-5">
-      <div className="card">
-        <div className="card-header bg-warning text-white text-center">
-          <h4>Notification par Email pour le Choix du PFE</h4>
-        </div>
-        <div className="card-body">
-          <div className="mb-3">
-            <label htmlFor="option" className="form-label">
+    <div className="container mx-auto mt-10 p-4">
+      <div className="bg-white shadow-lg rounded-lg p-6">
+        <h3 className="text-2xl font-semibold mb-4 text-center text-indigo-600">
+          Notification par Email pour le Choix du PFE
+        </h3>
+
+        <div className="p-6">
+          <div className="mb-4">
+            <label
+              htmlFor="option"
+              className="block text-lg font-medium text-gray-700"
+            >
               Sélectionner l'option des étudiants :
             </label>
             <select
               id="option"
-              className="form-control"
+              className="mt-2 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
               value={selectedOption}
               onChange={handleSelectOption}
             >
@@ -193,43 +196,36 @@ const PFEEmailNotification = () => {
             </select>
           </div>
 
-          {/* <div className="mb-3">
-            <label htmlFor="customSubject" className="form-label">
-              Sujet personnalisé (optionnel) :
-            </label>
-            <input
-              type="text"
-              id="customSubject"
-              className="form-control"
-              value={customSubject}
-              onChange={(e) => setCustomSubject(e.target.value)}
-            />
-          </div> */}
-
-          <div className="mb-3">
-            <label htmlFor="customMessage" className="form-label">
+          <div className="mb-4">
+            <label
+              htmlFor="customMessage"
+              className="block text-lg font-medium text-gray-700"
+            >
               Message personnalisé (optionnel) :
             </label>
             <textarea
               id="customMessage"
-              className="form-control"
+              className="mt-2 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
               rows="4"
               value={customMessage}
               onChange={(e) => setCustomMessage(e.target.value)}
+              placeholder="Enter a custom message for the students here (optional)..."
             />
           </div>
 
           <button
             onClick={handleGenerateEmail}
-            className="btn btn-warning w-100"
+            className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition duration-300"
           >
-            Générer les emails
+            submit
           </button>
 
           {formStatus && (
             <div
-              className={`mt-3 alert ${
-                formStatus.includes("succès") ? "alert-success" : "alert-danger"
+              className={`mt-4 p-4 rounded-lg ${
+                formStatus.includes("succès")
+                  ? "bg-green-100 text-green-800"
+                  : "bg-red-100 text-red-800"
               }`}
             >
               {formStatus}
@@ -238,15 +234,20 @@ const PFEEmailNotification = () => {
 
           {/* Display generated emails */}
           {generatedEmail && (
-            <div className="mt-3">
-              <h5>Emails générés :</h5>
+            <div className="mt-6">
+              <h5 className="text-lg font-semibold">Emails générés :</h5>
               {generatedEmail.map((email, index) => (
-                <div key={index} className="alert alert-secondary">
-                  <h6>À : {email.recipient}</h6>
-                  <p>
+                <div
+                  key={index}
+                  className="mt-4 p-4 bg-gray-100 rounded-lg border border-gray-300"
+                >
+                  <h6 className="font-medium">À : {email.recipient}</h6>
+                  <p className="mt-1">
                     <strong>Objet:</strong> {email.subject}
                   </p>
-                  <pre>{email.emailMessage}</pre>
+                  <pre className="mt-2 whitespace-pre-wrap">
+                    {email.emailMessage}
+                  </pre>
                 </div>
               ))}
             </div>

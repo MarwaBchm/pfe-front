@@ -5,9 +5,12 @@ import PFEEmailForm from "../components/email4";
 import PFEReminderForm from "../components/email5";
 import PFEEncadrementForm from "../components/email6";
 import EncadrementInvitationForm from "../components/email7";
+import NonSelectionNotificationForm from "../components/email8";
+import PFEProposalForm from "../components/email9";
 import PFEVALIDATION from "../components/email10";
+import PFEEmailNotification from "../components/email11";
 import PFEEventNotification from "../components/email13";
-import PFEEmailNotification from "../components/email12";
+import PFEEmailNotification2 from "../components/email12";
 
 const OutlinedAlerts = () => {
   const [dynamicContent, setDynamicContent] = useState("default");
@@ -21,14 +24,14 @@ const OutlinedAlerts = () => {
     { label: "Encadrement Invitation Form", key: "encadrementinvform" },
     {
       label: "Non-Selection Notification Form",
-      link: "http://localhost:5173/email8/",
+      key: "Non-SelectionNotificationForm",
     },
-    { label: "PFE Proposal Form", link: "http://localhost:5173/email9/" },
+    { label: "PFE Proposal Form", key: "PFEProposalForm" },
     { label: "PFE Validation", key: "pfeValidation" },
-    { label: "PFE Email Notification", link: "http://localhost:5173/email11/" },
+    { label: "PFE Email Notification", key: "pfeemailnotification" },
     {
       label: "Jury Assignment Notification",
-      key: "pfeemailnotification",
+      key: "pfeemailnotification2",
     },
     { label: "PFE Event Notification", key: "pefeventnotification" },
   ];
@@ -137,11 +140,19 @@ const OutlinedAlerts = () => {
 
       case "encadrementinvform":
         return <EncadrementInvitationForm />;
-        
+      case "PFEProposalForm":
+        return <PFEProposalForm />;
+      case "Non-SelectionNotificationForm":
+        return <NonSelectionNotificationForm />;
+
       case "pfeValidation":
         return <PFEVALIDATION />;
+
       case "pfeemailnotification":
         return <PFEEmailNotification />;
+
+      case "pfeemailnotification2":
+        return <PFEEmailNotification2 />;
       case "pefeventnotification":
         return <PFEEventNotification />;
 
