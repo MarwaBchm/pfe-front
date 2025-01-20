@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-// import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
-// import "./emails.css";
+
 const PFEEmailForm = () => {
   const [formData, setFormData] = useState({
     subject: "Call for PFE Proposals",
@@ -62,104 +61,115 @@ const PFEEmailForm = () => {
       "Email configured successfully! Check below for the preview."
     );
   };
-  const handleReviewPageClick = () => {
-    navigate("/dashboard/emails/"); // This will navigate to the /review page
-  };
-  return (
-    <div className="container mt-5">
-      <div className="card">
-        <div className="card-header bg-primary text-white text-center">
-          <h4>Configure PFE Call Email</h4>
-        </div>
-        <div className="card-body">
-          <form onSubmit={handleFormSubmit}>
-            {/* Subject Input */}
-            <div className="mb-3">
-              <label htmlFor="subject" className="form-label">
-                Email Subject:
-              </label>
-              <input
-                type="text"
-                id="subject"
-                name="subject"
-                className="form-control"
-                value={formData.subject}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
 
-            {/* Checkbox Options */}
-            <div className="mb-3">
-              <label className="form-label">Send To :</label>
+  return (
+    <div className="max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-lg">
+      <h3 className="text-2xl font-semibold mb-4 text-center text-indigo-600">
+        Configure PFE Call Email
+      </h3>
+
+      <div className="p-6">
+        <form onSubmit={handleFormSubmit}>
+          {/* Subject Input */}
+          <div className="mb-4">
+            <label
+              htmlFor="subject"
+              className="block text-lg font-medium text-gray-700"
+            >
+              Email Subject:
+            </label>
+            <input
+              type="text"
+              id="subject"
+              name="subject"
+              className="mt-2 w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+              value={formData.subject}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+
+          {/* Checkbox Options */}
+          <div className="mb-4">
+            <label className="block text-lg font-medium text-gray-700">
+              Send To:
+            </label>
+            <div className="flex flex-wrap gap-4 mt-2">
               {projectTypes.map((type) => (
-                <div className="form-check" key={type}>
+                <div key={type} className="flex items-center">
                   <input
-                    className="form-check-input"
                     type="checkbox"
                     id={type}
                     value={type}
                     checked={formData.type.includes(type)}
                     onChange={(e) => handleCheckboxChange(e, type)}
+                    className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
                   />
-                  <label className="form-check-label" htmlFor={type}>
+                  <label
+                    htmlFor={type}
+                    className="ml-2 text-sm font-medium text-gray-700"
+                  >
                     {type}
                   </label>
                 </div>
               ))}
             </div>
+          </div>
 
-            {/* Custom Message Input */}
-            <div className="mb-3">
-              <label htmlFor="customMessage" className="form-label">
-                Custom Message (optional):
-              </label>
-              <textarea
-                id="customMessage"
-                name="customMessage"
-                className="form-control"
-                rows="4"
-                placeholder="Add any additional information here..."
-                value={formData.customMessage}
-                onChange={handleInputChange}
-              />
-            </div>
-
-            {/* Submit Button */}
-            <button type="submit" className="btn btn-primary w-100">
-              Generate Email Preview
-            </button>
-          </form>
-
-          {/* Form Status */}
-          {formStatus && (
-            <div
-              className={`mt-3 alert ${
-                formStatus.includes("successfully")
-                  ? "alert-success"
-                  : "alert-danger"
-              }`}
+          {/* Custom Message Input */}
+          <div className="mb-4">
+            <label
+              htmlFor="customMessage"
+              className="block text-lg font-medium text-gray-700"
             >
-              {formStatus}
-            </div>
-          )}
+              Custom Message (optional):
+            </label>
+            <textarea
+              id="customMessage"
+              name="customMessage"
+              className="mt-2 w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+              rows="4"
+              placeholder="Add any additional information here..."
+              value={formData.customMessage}
+              onChange={handleInputChange}
+            />
+          </div>
 
-          {/* Email Preview */}
-          {emailPreview && (
-            <div className="mt-4">
-              <h5>Email Preview:</h5>
-              <div className="alert alert-secondary">
-                <pre>{emailPreview}</pre>
-              </div>
-            </div>
-          )}
+          {/* Submit Button */}
           <button
-            onClick={handleReviewPageClick}
-            className="btn btn-secondary w-100 mt-3"
+            type="submit"
+            className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition duration-300"
           >
-            Go to Review Page
+            Submit
           </button>
-        </div>
+        </form>
+
+        {/* Form Status */}
+        {formStatus && (
+          <div
+            className={`mt-4 p-4 rounded-lg text-center ${
+              formStatus.includes("successfully")
+                ? "bg-green-100 text-green-700"
+                : "bg-red-100 text-red-700"
+            }`}
+          >
+            {formStatus}
+          </div>
+        )}
+
+        {/* Email Preview */}
+        {emailPreview && (
+          <div className="mt-6">
+            <h5 className="text-lg font-semibold text-gray-800">
+              Email Preview:
+            </h5>
+            <div className="mt-2 p-4 bg-gray-100 border rounded-lg">
+              <pre className="whitespace-pre-wrap break-words text-gray-800">
+                {emailPreview}
+              </pre>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

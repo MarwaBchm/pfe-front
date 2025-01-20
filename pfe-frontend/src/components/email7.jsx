@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-// import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
 
 const EncadrementInvitationForm = () => {
@@ -13,7 +12,7 @@ const EncadrementInvitationForm = () => {
   });
   const navigate = useNavigate();
   const [formStatus, setFormStatus] = useState("");
-  const [generatedEmail, setGeneratedEmail] = useState(""); // État pour stocker l'email généré
+  const [generatedEmail, setGeneratedEmail] = useState("");
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -26,7 +25,6 @@ const EncadrementInvitationForm = () => {
   const handleFormSubmit = (e) => {
     e.preventDefault();
 
-    // Validation
     if (
       !formData.professorName ||
       !formData.studentName ||
@@ -36,7 +34,6 @@ const EncadrementInvitationForm = () => {
       return;
     }
 
-    // Génération du message email
     const emailMessage = `
       Subject: ${formData.subject}
       ---------------------------------------------------------
@@ -60,31 +57,36 @@ const EncadrementInvitationForm = () => {
       PFE Management Team
     `;
 
-    // Mettre à jour le message généré
     setGeneratedEmail(emailMessage);
-    setFormStatus("Encadrement assignment email configured successfully!"); // Message de succès
+    setFormStatus("Encadrement assignment email configured successfully!");
   };
+
   const handleReviewPageClick = () => {
-    navigate("/dashboard/emails/"); // This will navigate to the /review page
+    navigate("/dashboard/emails/");
   };
+
   return (
-    <div className="container mt-5">
-      <div className="card">
-        <div className="card-header bg-success text-white text-center">
-          <h4>Configure Encadrement Assignment Notification Email</h4>
-        </div>
-        <div className="card-body">
+    <div className="max-w-4xl mx-auto mt-10 px-6">
+      <div className="max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-lg">
+        <h3 className="text-2xl font-semibold mb-4 text-center text-indigo-600">
+          Configure Encadrement Assignment Notification Email
+        </h3>
+
+        <div className="p-6">
           <form onSubmit={handleFormSubmit}>
             {/* Subject Input */}
-            <div className="mb-3">
-              <label htmlFor="subject" className="form-label">
+            <div className="mb-4">
+              <label
+                htmlFor="subject"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Email Subject:
               </label>
               <input
                 type="text"
                 id="subject"
                 name="subject"
-                className="form-control"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500"
                 placeholder="PFE Encadrement Assignment Notification"
                 value={formData.subject}
                 onChange={handleInputChange}
@@ -93,15 +95,18 @@ const EncadrementInvitationForm = () => {
             </div>
 
             {/* Professor Name Input */}
-            <div className="mb-3">
-              <label htmlFor="professorName" className="form-label">
+            <div className="mb-4">
+              <label
+                htmlFor="professorName"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Professor Name:
               </label>
               <input
                 type="text"
                 id="professorName"
                 name="professorName"
-                className="form-control"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500"
                 placeholder="Enter Professor's Name"
                 value={formData.professorName}
                 onChange={handleInputChange}
@@ -110,15 +115,18 @@ const EncadrementInvitationForm = () => {
             </div>
 
             {/* Student Name Input */}
-            <div className="mb-3">
-              <label htmlFor="studentName" className="form-label">
+            <div className="mb-4">
+              <label
+                htmlFor="studentName"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Student Name:
               </label>
               <input
                 type="text"
                 id="studentName"
                 name="studentName"
-                className="form-control"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500"
                 placeholder="Enter Student's Name"
                 value={formData.studentName}
                 onChange={handleInputChange}
@@ -127,15 +135,18 @@ const EncadrementInvitationForm = () => {
             </div>
 
             {/* Enterprise Name Input */}
-            <div className="mb-3">
-              <label htmlFor="enterpriseName" className="form-label">
+            <div className="mb-4">
+              <label
+                htmlFor="enterpriseName"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Enterprise Name (optional):
               </label>
               <input
                 type="text"
                 id="enterpriseName"
                 name="enterpriseName"
-                className="form-control"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500"
                 placeholder="Enter Enterprise Name"
                 value={formData.enterpriseName}
                 onChange={handleInputChange}
@@ -143,15 +154,18 @@ const EncadrementInvitationForm = () => {
             </div>
 
             {/* Project Title Input */}
-            <div className="mb-3">
-              <label htmlFor="projectTitle" className="form-label">
+            <div className="mb-4">
+              <label
+                htmlFor="projectTitle"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Project Title:
               </label>
               <input
                 type="text"
                 id="projectTitle"
                 name="projectTitle"
-                className="form-control"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500"
                 placeholder="Enter Project Title"
                 value={formData.projectTitle}
                 onChange={handleInputChange}
@@ -160,14 +174,17 @@ const EncadrementInvitationForm = () => {
             </div>
 
             {/* Custom Message Input */}
-            <div className="mb-3">
-              <label htmlFor="customMessage" className="form-label">
+            <div className="mb-4">
+              <label
+                htmlFor="customMessage"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Custom Message (optional):
               </label>
               <textarea
                 id="customMessage"
                 name="customMessage"
-                className="form-control"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500"
                 rows="4"
                 placeholder="Add any additional instructions or messages here..."
                 value={formData.customMessage}
@@ -176,18 +193,21 @@ const EncadrementInvitationForm = () => {
             </div>
 
             {/* Submit Button */}
-            <button type="submit" className="btn btn-success w-100">
-              Generate Encadrement Assignment Email
+            <button
+              type="submit"
+              className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+            >
+              submit
             </button>
           </form>
 
           {/* Form Status */}
           {formStatus && (
             <div
-              className={`mt-3 alert ${
+              className={`mt-4 p-4 rounded-md ${
                 formStatus.includes("successfully")
-                  ? "alert-success"
-                  : "alert-danger"
+                  ? "bg-green-100 text-green-800"
+                  : "bg-red-100 text-red-800"
               }`}
             >
               {formStatus}
@@ -196,19 +216,15 @@ const EncadrementInvitationForm = () => {
 
           {/* Display Generated Email Message */}
           {generatedEmail && (
-            <div className="mt-3">
-              <h5>Generated Email Preview:</h5>
-              <div className="alert alert-secondary">
-                <pre>{generatedEmail}</pre>
+            <div className="mt-6">
+              <h5 className="text-lg font-semibold">
+                Generated Email Preview:
+              </h5>
+              <div className="bg-gray-100 rounded-md p-4 mt-2">
+                <pre className="text-sm text-gray-800">{generatedEmail}</pre>
               </div>
             </div>
           )}
-          <button
-            onClick={handleReviewPageClick}
-            className="btn btn-secondary w-100 mt-3"
-          >
-            Go to Review Page
-          </button>
         </div>
       </div>
     </div>

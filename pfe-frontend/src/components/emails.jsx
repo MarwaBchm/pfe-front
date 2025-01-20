@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import AdminEmailSettings from "./Temail1";
 import AddUserForm from "../components/email3";
+import PFEEmailForm from "../components/email4";
+import PFEReminderForm from "../components/email5";
+import PFEEncadrementForm from "../components/email6";
+import EncadrementInvitationForm from "../components/email7";
 import PFEVALIDATION from "../components/email10";
 import PFEEventNotification from "../components/email13";
 import PFEEmailNotification from "../components/email12";
@@ -10,17 +14,11 @@ const OutlinedAlerts = () => {
 
   const alertLinks = [
     { label: "Email Settings", key: "emailSettings" },
-    { label: "Template Password", link: "templatepassword" },
-    { label: "Configure PFE Call Email", link: "" },
-    { label: "PFE Reminder Form", link: "http://localhost:5173/email5/" },
-    {
-      label: "Encadrement Invitation Email",
-      link: "http://localhost:5173/email6/",
-    },
-    {
-      label: "Encadrement Invitation Form",
-      link: "http://localhost:5173/email7/",
-    },
+    { label: "Template Password", key: "templatepassword" },
+    { label: "Configure PFE Call Email", key: "PFEEmailForm" },
+    { label: "PFE Reminder Form", key: "pfereminder" },
+    { label: "Encadrement Invitation Email", key: "encadrementinv" },
+    { label: "Encadrement Invitation Form", key: "encadrementinvform" },
     {
       label: "Non-Selection Notification Form",
       link: "http://localhost:5173/email8/",
@@ -129,6 +127,17 @@ const OutlinedAlerts = () => {
         return <AdminEmailSettings />;
       case "templatepassword":
         return <AddUserForm />;
+
+      case "PFEEmailForm":
+        return <PFEEmailForm />;
+      case "pfereminder":
+        return <PFEReminderForm />;
+      case "encadrementinv":
+        return <PFEEncadrementForm />;
+
+      case "encadrementinvform":
+        return <EncadrementInvitationForm />;
+        
       case "pfeValidation":
         return <PFEVALIDATION />;
       case "pfeemailnotification":

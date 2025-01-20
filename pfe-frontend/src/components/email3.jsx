@@ -1,15 +1,16 @@
 import React, { useState } from "react";
-// import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const AddUserForm = () => {
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
+    subject: "Generate a password",
+    customMessage: "",
+    type: [],
   });
   const navigate = useNavigate();
   const [formStatus, setFormStatus] = useState("");
-  const [generatedPassword, setGeneratedPassword] = useState("");
+  const [generatedEmail, setGeneratedEmail] = useState(""); // Store the generated email preview
+  const [generatedPassword, setGeneratedPassword] = useState(""); // Store generated password
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -19,116 +20,163 @@ const AddUserForm = () => {
     }));
   };
 
-  const handleFormSubmit = async (e) => {
+  const handleCheckboxChange = (e, value) => {
+    setFormData((prevData) => {
+      const updatedType = e.target.checked
+        ? [...prevData.type, value]
+        : prevData.type.filter((item) => item !== value);
+      return { ...prevData, type: updatedType };
+    });
+  };
+
+  const handleFormSubmit = (e) => {
     e.preventDefault();
 
-    if (!formData.name || !formData.email) {
-      setFormStatus("Please fill in all fields.");
+    if (!formData.subject || formData.type.length === 0) {
+      setFormStatus("Please fill in the subject and select at least one type.");
       return;
     }
 
-    if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      setFormStatus("Please enter a valid email address.");
-      return;
-    }
-
-    // Generate a temporary password
+    // Generate the temporary password
     const tempPassword = Math.random().toString(36).slice(-8);
     setGeneratedPassword(tempPassword);
 
-    try {
-      // Send data to the backend
-      const response = await axios.post("http://localhost:5000/api/users", {
-        ...formData,
-        password: tempPassword,
-      });
+    // Generate the email content
+    const emailMessage = `
+      Hello ${formData.type.join(", ")},\n\n
+      Welcome to GradMastery! Here are the details of your submission:\n\n
+      Subject: ${formData.subject}\n
+      Selected Types: ${
+        formData.type.length > 0 ? formData.type.join(", ") : "None"
+      }\n\n
+      Your temporary password is: ${tempPassword}\n\n
+      Please change it after logging in.\n\n
+      You can access the platform here: http://localhost:5173/dashboard/home\n\n
+      Best regards,\n
+      GradMastery Team
+    `;
 
-      if (response.status === 201) {
-        setFormStatus("User added and email sent successfully!");
-        setFormData({ name: "", email: "" });
-      }
-    } catch (error) {
-      console.error(error);
-      setFormStatus("Failed to add user. Please try again.");
-    }
-  };
-
-  const handleReviewPageClick = () => {
-    navigate("/dashboard/emails/"); // This will navigate to the /review page
+    // Store the generated email message
+    setGeneratedEmail(emailMessage);
+    setFormStatus("Form submitted and email preview generated successfully!");
   };
 
   return (
-    <div className="max-w-lg mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
-      <div className="text-center mb-6">
-        <h4 className="text-2xl font-semibold text-blue-600">Add New User</h4>
-      </div>
-      <form onSubmit={handleFormSubmit} className="space-y-6">
-        <div>
+    <div className="max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-lg">
+      <h3 className="text-2xl font-semibold mb-4 text-center text-indigo-600">
+        Generate a password
+      </h3>
+
+      <form onSubmit={handleFormSubmit}>
+        {/* Subject Input */}
+        <div className="mb-4">
           <label
-            htmlFor="name"
+            htmlFor="subject"
             className="block text-lg font-medium text-gray-700"
           >
-            Name:
+            Email Subject:
           </label>
           <input
             type="text"
-            id="name"
-            name="name"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            placeholder="Enter user's name"
-            value={formData.name}
+            id="subject"
+            name="subject"
+            className="mt-2 p-2 w-full border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
+            placeholder="Generate a password"
+            value={formData.subject}
             onChange={handleInputChange}
             required
           />
         </div>
-        <div>
+
+        {/* Type Checkbox */}
+        <div className="mb-4">
+          <label className="block text-lg font-medium text-gray-700">
+            Send To:
+          </label>
+          <div className="flex flex-wrap gap-4">
+            {["Student", "Professor", "Enterprise"].map((type) => (
+              <div key={type} className="flex items-center">
+                <input
+                  type="checkbox"
+                  id={type}
+                  value={type}
+                  checked={formData.type.includes(type)}
+                  onChange={(e) => handleCheckboxChange(e, type)}
+                  className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                />
+                <label
+                  htmlFor={type}
+                  className="ml-2 text-sm font-medium text-gray-700"
+                >
+                  {type}
+                </label>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Custom Message Input */}
+        <div className="mb-4">
           <label
-            htmlFor="email"
+            htmlFor="customMessage"
             className="block text-lg font-medium text-gray-700"
           >
-            Email:
+            Custom Message (optional):
           </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            placeholder="Enter user's email"
-            value={formData.email}
+          <textarea
+            id="customMessage"
+            name="customMessage"
+            className="mt-2 p-2 w-full border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
+            rows="4"
+            placeholder="Add any additional instructions or reminders here..."
+            value={formData.customMessage}
             onChange={handleInputChange}
-            required
           />
         </div>
+
+        {/* Submit Button */}
         <button
           type="submit"
-          className="w-full py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition duration-300"
         >
-          Add User
+          Submit
         </button>
       </form>
 
+      {/* Form Status */}
       {formStatus && (
         <div
-          className={`mt-3 p-4 rounded-md text-white ${
-            formStatus.includes("successfully") ? "bg-green-500" : "bg-red-500"
+          className={`mt-3 p-4 rounded-lg text-center ${
+            formStatus.includes("successfully")
+              ? "bg-green-100 text-green-700"
+              : "bg-red-100 text-red-700"
           }`}
         >
           {formStatus}
         </div>
       )}
 
-      {generatedPassword && (
-        <div className="mt-4 text-lg font-medium text-gray-700">
-          <strong>Generated Password:</strong> {generatedPassword}
+      {/* Display Generated Email Preview */}
+      {generatedEmail && (
+        <div className="mt-6">
+          <h5 className="text-xl font-semibold text-gray-800">
+            Email Preview:
+          </h5>
+          <div className="mt-2 p-4 bg-gray-100 border rounded-lg">
+            <pre className="whitespace-pre-wrap break-words text-gray-800">
+              {generatedEmail}
+            </pre>
+          </div>
         </div>
       )}
 
-      <button
-        onClick={handleReviewPageClick}
-        className="w-full mt-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500"
-      >
-        Go to Review Page
-      </button>
+      {/* Display Generated Temporary Password */}
+      {generatedPassword && (
+        <div className="mt-6 text-lg font-semibold">
+          <span className="text-gray-800">Temporary Password:</span>{" "}
+          {generatedPassword}
+        </div>
+      )}
     </div>
   );
 };

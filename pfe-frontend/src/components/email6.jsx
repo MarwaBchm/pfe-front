@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-// import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
 
 const PFEEncadrementForm = () => {
@@ -56,27 +55,33 @@ const PFEEncadrementForm = () => {
       "Encadrement invitation email configured successfully! Check below for the preview."
     );
   };
+
   const handleReviewPageClick = () => {
     navigate("/dashboard/emails/"); // This will navigate to the /review page
   };
+
   return (
-    <div className="container mt-5">
-      <div className="card">
-        <div className="card-header bg-info text-white text-center">
-          <h4>Configure PFE Encadrement Invitation Email</h4>
-        </div>
-        <div className="card-body">
+    <div className="max-w-4xl mx-auto mt-10 px-6">
+      <div className="max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-lg">
+        <h3 className="text-2xl font-semibold mb-4 text-center text-indigo-600">
+          Configure PFE Encadrement Invitation Email
+        </h3>
+
+        <div className="p-6">
           <form onSubmit={handleFormSubmit}>
             {/* Subject Input */}
-            <div className="mb-3">
-              <label htmlFor="subject" className="form-label">
+            <div className="mb-4">
+              <label
+                htmlFor="subject"
+                className="block font-medium text-gray-700"
+              >
                 Email Subject:
               </label>
               <input
                 type="text"
                 id="subject"
                 name="subject"
-                className="form-control"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Call for PFE Supervision: Student and Enterprise Proposals"
                 value={formData.subject}
                 onChange={handleInputChange}
@@ -85,14 +90,17 @@ const PFEEncadrementForm = () => {
             </div>
 
             {/* Project Type Select */}
-            <div className="mb-3">
-              <label htmlFor="projectType" className="form-label">
+            <div className="mb-4">
+              <label
+                htmlFor="projectType"
+                className="block font-medium text-gray-700"
+              >
                 Type of Project:
               </label>
               <select
                 id="projectType"
                 name="projectType"
-                className="form-control"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
                 value={formData.projectType}
                 onChange={handleInputChange}
                 required
@@ -104,15 +112,18 @@ const PFEEncadrementForm = () => {
             </div>
 
             {/* Proposer Input */}
-            <div className="mb-3">
-              <label htmlFor="proposer" className="form-label">
+            <div className="mb-4">
+              <label
+                htmlFor="proposer"
+                className="block font-medium text-gray-700"
+              >
                 Proposer Name:
               </label>
               <input
                 type="text"
                 id="proposer"
                 name="proposer"
-                className="form-control"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Enter Name of the Student/Enterprise"
                 value={formData.proposer}
                 onChange={handleInputChange}
@@ -121,34 +132,40 @@ const PFEEncadrementForm = () => {
             </div>
 
             {/* Custom Message Input */}
-            <div className="mb-3">
-              <label htmlFor="customMessage" className="form-label">
+            <div className="mb-4">
+              <label
+                htmlFor="customMessage"
+                className="block font-medium text-gray-700"
+              >
                 Custom Message (optional):
               </label>
               <textarea
                 id="customMessage"
                 name="customMessage"
-                className="form-control"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
                 rows="4"
                 placeholder="Add any additional instructions or reminders here..."
                 value={formData.customMessage}
                 onChange={handleInputChange}
-              />
+              ></textarea>
             </div>
 
             {/* Submit Button */}
-            <button type="submit" className="btn btn-info w-100">
-              Generate Encadrement Invitation Email
+            <button
+              type="submit"
+              className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+            >
+              Submit
             </button>
           </form>
 
           {/* Form Status */}
           {formStatus && (
             <div
-              className={`mt-3 alert ${
+              className={`mt-4 p-4 rounded-md ${
                 formStatus.includes("successfully")
-                  ? "alert-success"
-                  : "alert-danger"
+                  ? "bg-green-100 text-green-800"
+                  : "bg-red-100 text-red-800"
               }`}
             >
               {formStatus}
@@ -157,19 +174,13 @@ const PFEEncadrementForm = () => {
 
           {/* Display Generated Email Preview */}
           {generatedEmail && (
-            <div className="mt-3">
-              <h5>Email Preview:</h5>
-              <div className="alert alert-secondary">
-                <pre>{generatedEmail}</pre>
+            <div className="mt-6">
+              <h5 className="text-lg font-semibold">Email Preview:</h5>
+              <div className="bg-gray-100 rounded-md p-4 mt-2">
+                <pre className="text-sm text-gray-800">{generatedEmail}</pre>
               </div>
             </div>
           )}
-          <button
-            onClick={handleReviewPageClick}
-            className="btn btn-secondary w-100 mt-3"
-          >
-            Go to Review Page
-          </button>
         </div>
       </div>
     </div>
