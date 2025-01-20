@@ -169,7 +169,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="flex h-full">
+    <div className="flex h-full z-0 ">
       <div
         className={`sidebar-container bg-white pt-2 shadow-lg h-full transition-all duration-500 overflow-y-auto ${
           isOpen ? "w-48 sm:w-48 lg:w-60" : "w-16"

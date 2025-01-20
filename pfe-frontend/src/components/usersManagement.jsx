@@ -182,7 +182,7 @@ const UsersManagement = () => {
   );
 
   return (
-    <div className="flex flex-col w-full h-full ">
+    <div className="flex flex-col w-full h-full z-0">
       {currentAction === "add" ? renderAddForm() : renderListView()}
     </div>
   );

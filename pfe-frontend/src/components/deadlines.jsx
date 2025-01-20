@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from "react";
 import "../styles/deadlines.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import Cookies from "js-cookie";
 
 const Deadlines = () => {
-  const [role, setRole] = useState("prof"); // Current user role
+  const user = Cookies.get("user");
+  const parsedUser = user ? JSON.parse(user) : null;
+  const role = parsedUser?.role || "No role found";
+
   const [formData, setFormData] = useState({
     theme: "",
     description: "",
     dueDate: "",
   });
-  const [selectedRole, setSelectedRole] = useState("prof"); // Role to send the deadline to
+  const [selectedRole, setSelectedRole] = useState(role); // Use role from cookie
   const [deadlines, setDeadlines] = useState([]); // Shared deadlines state
   const [editingIndex, setEditingIndex] = useState(null); // For editing deadlines
 
@@ -37,7 +41,7 @@ const Deadlines = () => {
       setDeadlines(updatedDeadlines);
     }
     setFormData({ theme: "", description: "", dueDate: "" }); // Reset form
-    setSelectedRole("prof");
+    setSelectedRole(role); // Reset to default role from cookie
     setEditingIndex(null);
   };
 
@@ -75,7 +79,9 @@ const Deadlines = () => {
       {role === "admin" ? (
         <div className="app-container">
           <div className="header-container">
-            <h1 className="page-title">{editingIndex === null ? "Add Deadline" : "Edit Deadline"}</h1>
+            <h1 className="page-title">
+              {editingIndex === null ? "Add Deadline" : "Edit Deadline"}
+            </h1>
             <div className="form-header">
               <button className="form-button save-button" onClick={handleSave}>
                 {editingIndex === null ? "Save" : "Update"}
@@ -163,12 +169,22 @@ const Deadlines = () => {
                 <div key={index} className="deadline-item">
                   <h3>{deadline.theme}</h3>
                   <p>{deadline.description}</p>
-                  <p><strong>Due Date:</strong> {deadline.dueDate}</p>
-                  <p><strong>Role:</strong> {deadline.role}</p>
-                  <button className="form-button edit-button" onClick={() => handleEdit(index)}>
+                  <p>
+                    <strong>Due Date:</strong> {deadline.dueDate}
+                  </p>
+                  <p>
+                    <strong>Role:</strong> {deadline.role}
+                  </p>
+                  <button
+                    className="form-button edit-button"
+                    onClick={() => handleEdit(index)}
+                  >
                     Edit
                   </button>
-                  <button className="form-button delete-button" onClick={() => handleDelete(index)}>
+                  <button
+                    className="form-button delete-button"
+                    onClick={() => handleDelete(index)}
+                  >
                     Delete
                   </button>
                 </div>
@@ -182,14 +198,20 @@ const Deadlines = () => {
         <div className="app-container">
           <h1 className="page-title">Deadlines for {role}</h1>
           {deadlines.length > 0 ? (
-            deadlines.map((deadline, index) => (
-              <div key={index} className="deadline-item">
-                <h3>{deadline.theme}</h3>
-                <p>{deadline.description}</p>
-                <p><strong>Due Date:</strong> {deadline.dueDate}</p>
-                <p><strong>Assigned By:</strong> Admin</p>
-              </div>
-            ))
+            deadlines
+              .filter((deadline) => deadline.role === role) // Show deadlines for the current role
+              .map((deadline, index) => (
+                <div key={index} className="deadline-item">
+                  <h3>{deadline.theme}</h3>
+                  <p>{deadline.description}</p>
+                  <p>
+                    <strong>Due Date:</strong> {deadline.dueDate}
+                  </p>
+                  <p>
+                    <strong>Assigned By:</strong> Admin
+                  </p>
+                </div>
+              ))
           ) : (
             <p>No deadlines available.</p>
           )}

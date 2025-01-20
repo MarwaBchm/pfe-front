@@ -5,7 +5,7 @@ import CompanySettings from "./ui/companyUI/CompanySettings";
 
 const Settings = () => {
   // Change the role to 'student', 'professor', or 'company' here
-  const role = "company"; // Options: 'student', 'professor', 'company'
+  const role = "professor"; // Options: 'student', 'professor', 'company'
 
   return (
     <div className=" flex flex-row  w-full items-center justify-center px-20">

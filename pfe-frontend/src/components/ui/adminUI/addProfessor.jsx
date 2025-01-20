@@ -1,15 +1,22 @@
 import React, { useState, useRef } from "react";
+import axios from "axios"; // Import axios for backend requests
 
-function AddProfessor({close}) {
+function AddProfessor({ close }) {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     email: "",
-    dateOfBirth: "",
-    department: "",
-    specialization: "",
+    dateOfRecrutement: "", // Ensure this is a string in YYYY-MM-DD format
+    grade: "Assistant Lecturer Class B", // Default value based on your migration
+    role: "professor", // Set the role to 'professor'
   });
 
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false); // Loading state for progress bar
+  const [progress, setProgress] = useState(0); // Progress state for the linear bar
+  const [error, setError] = useState(""); // To show error messages
+  const [success, setSuccess] = useState(""); // To show success message
   const fileInputRef = useRef(null);
 
   const handleInputChange = (e) => {
@@ -20,10 +27,59 @@ function AddProfessor({close}) {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+  };
+
+  const handleConfirmPasswordChange = (e) => {
+    setConfirmPassword(e.target.value);
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Professor Data:", formData);
-    // TODO: Add actual submission logic
+    setError(""); // Reset error message
+    setSuccess(""); // Reset success message
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match!");
+      return;
+    }
+
+    setLoading(true); // Start loading
+    setProgress(0); // Reset progress
+
+    // Map the frontend field names to the backend field names
+    const professorData = {
+      email: formData.email,
+      firstname: formData.firstName,
+      lastname: formData.lastName,
+      grade: formData.grade,
+      recruitment_date: formData.dateOfRecrutement, // Map to backend field name
+      role: formData.role, // Ensure the role is set to 'professor'
+    };
+
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/register",
+        professorData,
+        {
+          onUploadProgress: (progressEvent) => {
+            const percentage = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
+            setProgress(percentage); // Update progress
+          },
+        }
+      );
+
+      console.log("Professor added:", response.data);
+      setSuccess("Professor successfully added!");
+      setLoading(false); // Stop loading
+    } catch (error) {
+      console.error("Error adding professor:", error);
+      setLoading(false); // Stop loading on error
+      setError("There was an error adding the professor.");
+    }
   };
 
   const handleCSVImport = () => {
@@ -33,13 +89,35 @@ function AddProfessor({close}) {
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const csvText = event.target.result;
-        // TODO: Parse CSV and import professors
-        console.log("CSV Content:", csvText);
-      };
-      reader.readAsText(file);
+      const formData = new FormData();
+      formData.append("csv_file", file); // Append the file with the key 'csv_file'
+
+      setLoading(true); // Start loading
+      setProgress(0); // Reset progress
+
+      // Send the form data to the backend
+      axios
+        .post("http://127.0.0.1:8000/api/bulk-import-users", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data", // Set the content type to multipart
+          },
+          onUploadProgress: (progressEvent) => {
+            const percentage = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
+            setProgress(percentage); // Update progress
+          },
+        })
+        .then((response) => {
+          console.log("Professors added from CSV:", response.data);
+          setLoading(false); // Stop loading
+          setSuccess("Professors successfully imported from CSV!");
+        })
+        .catch((error) => {
+          console.error("Error importing professors from CSV:", error);
+          setLoading(false); // Stop loading on error
+          setError("There was an error importing the professors.");
+        });
     }
   };
 
@@ -58,6 +136,29 @@ function AddProfessor({close}) {
           Import from CSV file
         </button>
       </div>
+
+      {/* Linear Progress Bar */}
+      {loading && (
+        <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
+          <div
+            className="bg-blue-600 h-2 rounded-full"
+            style={{ width: `${progress}%` }}
+          ></div>
+        </div>
+      )}
+
+      {/* Success or Error Message */}
+      {success && (
+        <div className="text-green-600 text-center bg-green-200 my-3 py-1">
+          {success}
+        </div>
+      )}
+      {error && (
+        <div className="text-red-600 text-center  my-3 py-1 bg-red-2">
+          {error}
+        </div>
+      )}
+
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="flex flex-row gap-3">
           <div className="w-full">
@@ -126,6 +227,8 @@ function AddProfessor({close}) {
               id="password"
               name="password"
               type="password"
+              value={password}
+              onChange={handlePasswordChange}
               className="w-full border-gray-200 text-blue-2 font-Arial text-13 py-1.5 px-3 focus:outline-none focus:border-blue-600 bg-gray-50 rounded-md shadow-sm focus:ring-indigo-500"
               required
             />
@@ -141,6 +244,8 @@ function AddProfessor({close}) {
               id="confirmPassword"
               name="confirmPassword"
               type="password"
+              value={confirmPassword}
+              onChange={handleConfirmPasswordChange}
               className="w-full border-gray-200 text-blue-2 font-Arial text-13 py-1.5 px-3 focus:outline-none focus:border-blue-600 bg-gray-50 rounded-md shadow-sm focus:ring-indigo-500"
               required
             />
@@ -150,16 +255,16 @@ function AddProfessor({close}) {
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label
-              htmlFor="dateOfBirth"
+              htmlFor="recruitementDate"
               className="block text-13 text-gray-3 mb-0.5 pl-1"
             >
-              Date of Birth
+              Recruitement date
             </label>
             <input
-              id="dateOfBirth"
-              name="dateOfBirth"
+              id="recruitementDate"
+              name="dateOfRecrutement"
               type="date"
-              value={formData.dateOfBirth}
+              value={formData.dateOfRecrutement}
               onChange={handleInputChange}
               className="w-full border-gray-200 text-blue-2 font-Arial text-13 py-1.5 px-3 focus:outline-none focus:border-blue-600 bg-gray-50 rounded-md shadow-sm focus:ring-indigo-500"
               required
@@ -167,39 +272,30 @@ function AddProfessor({close}) {
           </div>
           <div>
             <label
-              htmlFor="department"
+              htmlFor="grade"
               className="block text-13 text-gray-3 mb-0.5 pl-1"
             >
-              Department
+              Grade
             </label>
-            <input
-              id="department"
-              name="department"
-              type="text"
-              value={formData.department}
+            <select
+              id="grade"
+              name="grade"
+              value={formData.grade}
               onChange={handleInputChange}
-              className="w-full border-gray-200 text-blue-2 font-Arial text-13 py-1.5 px-3 focus:outline-none focus:border-blue-600 bg-gray-50 rounded-md shadow-sm focus:ring-indigo-500"
+              className="w-full border-gray-200 text-blue-2 font-Arial text-13 py-2  px-3 pr-0 focus:outline-none focus:border-blue-600 bg-gray-50 rounded-md shadow-sm focus:ring-indigo-500"
               required
-            />
+            >
+              <option value="Assistant Lecturer Class B">
+                Assistant Lecturer Class B
+              </option>
+              <option value="Assistant Lecturer Class A">
+                Assistant Lecturer Class A
+              </option>
+              <option value="Lecturer">Lecturer</option>
+              <option value="Senior Lecturer">Senior Lecturer</option>
+              <option value="Professor">Professor</option>
+            </select>
           </div>
-        </div>
-
-        <div>
-          <label
-            htmlFor="specialization"
-            className="block text-13 text-gray-3 mb-0.5 pl-1"
-          >
-            Specialization
-          </label>
-          <input
-            id="specialization"
-            name="specialization"
-            type="text"
-            value={formData.specialization}
-            onChange={handleInputChange}
-            className="w-full border-gray-200 text-blue-2 font-Arial text-13 py-1.5 px-3 focus:outline-none focus:border-blue-600 bg-gray-50 rounded-md shadow-sm focus:ring-indigo-500"
-            required
-          />
         </div>
 
         <div className="flex flex-row justify-end w-full gap-3">
@@ -218,6 +314,7 @@ function AddProfessor({close}) {
         </div>
       </form>
 
+      {/* Hidden file input for CSV */}
       <input
         type="file"
         ref={fileInputRef}

@@ -1,0 +1,9 @@
+email,role,firstname,lastname,grade,recruitment_date
+john.doe@example.com,professor,John,Doe,Assistant Lecturer Class B,2020-01-15
+jane.smith@example.com,professor,Jane,Smith,Assistant Lecturer Class A,2018-05-20
+michael.brown@example.com,professor,Michael,Brown,Senior Lecturer Class B,2019-11-10
+sarah.jones@example.com,professor,Sarah,Jones,Senior Lecturer Class A,2021-03-25
+david.wilson@example.com,professor,David,Wilson,Professor,2017-09-05
+emily.white@example.com,professor,Emily,White,Assistant Lecturer Class B,2022-07-12
+robert.green@example.com,professor,Robert,Green,Assistant Lecturer Class A,2016-12-30
+laura.black@example.com,professor,Laura,Black,Senior Lecturer Class B,2020-08-22
